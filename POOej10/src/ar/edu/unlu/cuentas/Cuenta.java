@@ -15,19 +15,11 @@ public class Cuenta {
 		}
 	
 	public boolean gastarDinero(double monto){
-		String pro = "N";
-		Scanner input = new Scanner(System.in);
 		
 		if ((this.saldo-monto) < 0) {
-//			System.out.println("Se necesita utilizar limite descubierto");
-//			System.out.println("Proseguir?");
-//			System.out.println("S/N");
-//			pro = input.next();
-			
-//			if (pro.equals("S") && ((this.saldo - monto - importeDescubierto) > -limiteDescubierto)){
-//				this.saldo = 0;
-//				this.importeDescubierto -= (this.saldo-monto);				
-//			}
+
+			this.importeDescubierto -= (this.saldo-monto);	
+			this.saldo = 0;			
 			
 		}else {
 			this.saldo -= monto;
@@ -35,7 +27,26 @@ public class Cuenta {
 		
 		return true;
 	}
-
+	
+	public boolean verificarSaldoInsuficiente(double monto) {
+		boolean resultado =false;
+		
+		if ((this.saldo - monto)< 0 ) {
+			resultado = true;
+		}
+		return resultado;
+		
+	}
+	
+	public boolean verificarLimiteDescubierto(double monto) {
+		boolean resultado =false;
+		
+		if ((this.importeDescubierto -(this.saldo - monto) <= this.limiteDescubierto)) {
+			resultado = true;
+		}
+		return resultado;
+		
+	}
 	
 	
 	
