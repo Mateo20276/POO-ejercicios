@@ -47,9 +47,7 @@ public class Cuenta {
 		return resultado;
 		
 	}
-	
-	
-	
+		
 	public boolean agregarDinero(double monto) {
 		if (this.limiteDescubierto > 0) {
 			if ((this.limiteDescubierto - monto) > 0) {
@@ -64,9 +62,7 @@ public class Cuenta {
 			this.saldo += monto;
 		}
 		return true;
-	}
-	
-	
+	}	
 	
 	
 	public double getSaldo() {
