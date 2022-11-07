@@ -35,10 +35,11 @@ public class Juego {
 			mazoJugadores.add(new Mazo());
 		}
 		for (int i = 0; i < (numero*ReglasNumeroJugadores.cartasARepartir(this.numeroJugadores)); i++) {
-			mazoJugadores.get(cont).agregarCarta(mazoArriba.getMazo().get(cont));
-			if (((cont + 1) % numero )< numero) {
-				cont = 0;
+			mazoJugadores.get(cont).agregarCarta(mazoArriba.getMazo().get(i));
+			if ((cont + 1) == numero ) {
+				cont = 0;			
 			}
+			else {cont++;}
 		}
 		
 		return mazoJugadores;
