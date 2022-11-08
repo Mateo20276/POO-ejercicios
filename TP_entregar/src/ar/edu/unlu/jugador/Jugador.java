@@ -26,6 +26,10 @@ public class Jugador {
 		return carta;
 	}
 	
+	public int getCantidadCartas() {
+		return mano.size();
+	}
+	
 	private void eliminarCartaMano(int indice) {
 		mano.remove(indice);	
 	}

@@ -1,10 +1,18 @@
 package ar.edu.unlu.juego;
 import java.util.ArrayList;
+import java.util.List;
+
 import ar.edu.unlu.baraja.*;
 import ar.edu.unlu.jugador.*;
+import ar.edu.unlu.observer.*;
 
-
-public class Juego {
+public class Juego implements Observable {
+	private List<Observador> observadores;
+	
+	private int jugadorInicial;
+	
+	private int jugadorActual;
+	
 	private int numeroJugadores;
 	
 	private ArrayList<Jugador> jugadores;
@@ -17,10 +25,19 @@ public class Juego {
 	
 	
 	
-	public Juego(int numeroJugadores, ArrayList<Jugador> jugadores,Mazo mazoArriba, Mazo mazoAbajo) {
+	public Juego(int numeroJugadores) {
 		super();
+		setJugadorInicial(0);
+		setJugadorActual(getJugadorInicial());
 		this.numeroJugadores = numeroJugadores;
-		jugadores = new ArrayList<>();
+		this.observadores = new ArrayList<>();
+		jugadores = new ArrayList<>();		
+		Mazo mazoarriba = new Mazo();
+		mazoarriba.generarMazo();
+		mazoarriba.mezclar();
+		setMazoArriba(mazoarriba);
+		Mazo mazoabajo = new Mazo();
+		setMazoAbajo(mazoabajo);
 		cargarJugadores();
 		
 	}
@@ -50,6 +67,35 @@ public class Juego {
 			jugadores.add(new Jugador(repartirCartaJugador(this.numeroJugadores).get(i).getMazo()));
 		}
 
+	}
+	
+	public void tirarCarta(int indice) {
+		Carta cartaAuxiliar;
+		cartaAuxiliar = this.jugadores.get(this.jugadorActual).tirarCarta(indice - 1);
+		this.mazoAbajo.agregarCarta(cartaAuxiliar);
+		cambiojugadorActual();
+	}
+	
+	public boolean terminaRonda() {
+		if (this.jugadores.get(this.jugadorActual).getCantidadCartas() == 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	public void cambioJugadorInicial() {
+		int jugadorIni;
+		jugadorIni = this.jugadorInicial + 1;
+		if (jugadorIni < this.numeroJugadores) {setJugadorInicial(jugadorIni);}
+		else {setJugadorInicial(0);}
+		
+	}
+	
+	private void cambiojugadorActual() {
+		int jugadorAct;
+		jugadorAct = this.jugadorActual + 1;
+		if (jugadorAct < this.numeroJugadores) {setJugadorActual(jugadorAct);}
+		else {setJugadorActual(0);}
 	}
 
 	public ArrayList<Jugador> getJugadores() {
@@ -85,5 +131,45 @@ public class Juego {
 		this.mazoAbajo = mazoAbajo;
 	}
 	
+	
+	public int getJugadorInicial() {
+		return jugadorInicial;
+	}
+
+
+
+	public void setJugadorInicial(int jugaroInicial) {
+		this.jugadorInicial = jugaroInicial;
+	}
+
+
+
+	public int getJugadorActual() {
+		return jugadorActual;
+	}
+
+
+
+	public void setJugadorActual(int jugadorActual) {
+		this.jugadorActual = jugadorActual;
+	}
+
+
+
+	@Override
+	public void agregadorObservador(Observador observador) {
+		this.observadores.add(observador);
+	}
+
+
+
+	@Override
+	public void notificar(Object evento) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
 	
 }

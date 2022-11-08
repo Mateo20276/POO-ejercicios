@@ -11,7 +11,7 @@ public class Mazo {
 		this.mazo = new ArrayList<>();
 	}
 	
-	private void generarMazo() {
+	public void generarMazo() {
 		int c = 1;
 		for (int i = 1; i < 5; i++) {
 			for (int j = 1; j < 13; j++) {
@@ -33,7 +33,7 @@ public class Mazo {
 		this.mazo = mazo;
 	}
 
-	private void mezclar() {
+	public void mezclar() {
 		Carta carta= null;
 		for (int i = 0; i < mazo.size(); i++) {
 			int random= (int) (Math.random()*mazo.size());
