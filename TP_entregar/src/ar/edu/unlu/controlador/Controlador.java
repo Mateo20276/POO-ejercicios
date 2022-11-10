@@ -34,10 +34,31 @@ public class Controlador implements Observador {
 	@Override
 	public void actualizar(Object evento, Observable observado) {
 
+		if(evento instanceof Eventos) {
+			switch((Eventos) evento) {
+			case CARTA_INEXISTENTE:
+				this.vista.mostrarCartaInexistente();
+				break;
+			
+			
+			}
+		}
+	}
+
+	public String verCartas() {
+		return this.modelo.mostrarManoJugador();
 		
 	}
+
+	public void pasarJugador() {
+		this.modelo.cambiojugadorActual();
+		
+	}
+
+		
+}
 	
 	
 	
 
-}
+

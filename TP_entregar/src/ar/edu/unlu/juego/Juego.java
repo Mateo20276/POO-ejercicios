@@ -6,6 +6,7 @@ import ar.edu.unlu.baraja.*;
 import ar.edu.unlu.jugador.*;
 import ar.edu.unlu.observer.*;
 
+
 public class Juego implements Observable {
 	private List<Observador> observadores;
 	
@@ -71,9 +72,12 @@ public class Juego implements Observable {
 	
 	public void tirarCarta(int indice) {
 		Carta cartaAuxiliar;
-		cartaAuxiliar = this.jugadores.get(this.jugadorActual).tirarCarta(indice - 1);
-		this.mazoAbajo.agregarCarta(cartaAuxiliar);
-		cambiojugadorActual();
+		if ((indice > 0)&&(indice < this.jugadores.get(this.jugadorActual).getCantidadCartas())){
+		
+			cartaAuxiliar = this.jugadores.get(this.jugadorActual).tirarCarta(indice - 1);
+			this.mazoAbajo.agregarCarta(cartaAuxiliar);
+		}
+		else {this.notificar(Eventos.CARTA_INEXISTENTE);}
 	}
 	
 	public boolean terminaRonda() {
@@ -91,13 +95,17 @@ public class Juego implements Observable {
 		
 	}
 	
-	private void cambiojugadorActual() {
+	public void cambiojugadorActual() {
 		int jugadorAct;
 		jugadorAct = this.jugadorActual + 1;
 		if (jugadorAct < this.numeroJugadores) {setJugadorActual(jugadorAct);}
 		else {setJugadorActual(0);}
 	}
 
+	public String mostrarManoJugador() {
+		return this.jugadores.get(jugadorActual).getMano().toString();
+	}
+	
 	public ArrayList<Jugador> getJugadores() {
 		return jugadores;
 	}
@@ -165,8 +173,9 @@ public class Juego implements Observable {
 
 	@Override
 	public void notificar(Object evento) {
-		// TODO Auto-generated method stub
-		
+		for (Observador observador : this.observadores) {
+			observador.actualizar(evento, this);
+		}
 	}
 
 

@@ -23,22 +23,36 @@ public class VistaConsola {
 		System.out.println();	
 		System.out.println();
 		System.out.println("Selecciona una opción:");
-		System.out.println("a - Tirar carta");
+		System.out.println("a - Mirar cartas");
+		System.out.println("b - Tirar carta");
 	}
 		
 	public void iniciar() {
 		boolean salir = false;
+		boolean pasa = false;
 		while(!salir) {
 			this.menuPrincipal();
+			if (pasa) {
+				System.out.println("c - Terminar turno");
+			}
 			String opcion = this.entrada.nextLine();
+			if (opcion.equals("b")) {pasa = true;}
 			switch (opcion.toLowerCase()) {
-				case "a":
+				case"a":
+					System.out.println(this.verCartas());
+					break;
+					
+				case "b":
 					System.out.println("Seleccione carta a tirar");
 					String carta = this.entrada.nextLine();
 					this.tirarCarta(Integer.parseInt(carta));
 					break;
-				case "b":;
+					
+				case "c":;
+					this.controlador.pasarJugador();
+					pasa = false;
 					break;
+					
 				default:
 					System.out.println("Opción no válida.");
 			}
@@ -50,9 +64,19 @@ public class VistaConsola {
 		this.controlador.tirarCarta(indice);
 	}
 	
+	private String verCartas(){
+		return this.controlador.verCartas();
+	}
 	
 	public void setControlador(Controlador controlador) {
 		this.controlador = controlador;
+	}
+
+
+
+	public void mostrarCartaInexistente() {
+		System.out.println("Carta Inexistente");
+		
 	}
 	
 }

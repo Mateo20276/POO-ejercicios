@@ -3,11 +3,11 @@ package ar.edu.unlu.baraja;
 public class Carta {
 	private int numero;//comodines (numero y palo = 0)
 	
-	private int palo;// (palo 1 = espada), (palo 2 = basto), (palo 3 = oro), (palo 4 = copa).
+	private Palo palo;// (palo 1 = espada), (palo 2 = basto), (palo 3 = oro), (palo 4 = copa).
 
 	private int id;
 	
-	public Carta(int numero, int palo, int id) {
+	public Carta(int numero, Palo palo, int id) {
 		super();
 		this.setNumero(numero);
 		this.setPalo(palo);
@@ -25,11 +25,11 @@ public class Carta {
 	}
 
 	
-	public int getPalo() {
+	public Palo getPalo() {
 		return palo;
 	}
 
-	private void setPalo(int palo) {
+	private void setPalo(Palo palo) {
 		this.palo = palo;
 	}
 	
@@ -43,7 +43,7 @@ public class Carta {
 	
 	@Override
 	public String toString() {
-		return "Carta [numero=" + numero + ", palo=" + palo + ", id=" + id + "]";
+		return "Carta [numero=" + numero + ", palo=" + palo + ", id=" + id + "]" + "\n";
 	}
  
 	
