@@ -39,6 +39,10 @@ public class Controlador implements Observador {
 			case CARTA_INEXISTENTE:
 				this.vista.mostrarCartaInexistente();
 				break;
+				
+			case CARTA_NO_COINCIDENTE:
+				this.vista.mostrarCartaNoCoincidente();
+				break;
 			
 			
 			}

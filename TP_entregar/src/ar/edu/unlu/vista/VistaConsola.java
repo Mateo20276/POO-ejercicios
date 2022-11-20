@@ -26,7 +26,7 @@ public class VistaConsola {
 		System.out.println("a - Mirar cartas");
 		System.out.println("b - Tirar carta");
 	}
-	
+  
 	public void menuInicial() {
 		System.out.println("########################");
 		System.out.println("####### JODETE #######");
@@ -107,6 +107,13 @@ public class VistaConsola {
 
 	public void mostrarCartaInexistente() {
 		System.out.println("Carta Inexistente");
+		
+	}
+
+
+
+	public void mostrarCartaNoCoincidente() {
+		System.out.println("Carta con numero o palo no valido");
 		
 	}
 	

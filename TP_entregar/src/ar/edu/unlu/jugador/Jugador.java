@@ -19,13 +19,18 @@ public class Jugador {
 
 
 	public Carta tirarCarta(int indice) {
-		Carta carta = mano.get(indice);
+		Carta carta = obtenerCarta(indice);
 		eliminarCartaMano(indice);		
 		
 		
 		return carta;
 	}
 	
+	public Carta obtenerCarta(int indice) {
+		Carta carta = this.mano.get(indice);
+		return carta;
+		
+	}
 	public int getCantidadCartas() {
 		return mano.size();
 	}

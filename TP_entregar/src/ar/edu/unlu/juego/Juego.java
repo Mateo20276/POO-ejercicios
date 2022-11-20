@@ -82,14 +82,38 @@ public class Juego implements Observable {
 		
 	}
 	
+	private boolean cartaArribaMazoAbajo(Carta carta) {
+		boolean resultado = false;
+		
+		if(this.mazoAbajo.getMazo().size() == 0) {
+			resultado = true;
+		}
+		
+		else if ((this.mazoAbajo.getMazo().get(this.mazoAbajo.getMazo().size()-1).getNumero() == carta.getNumero()) || (this.mazoAbajo.getMazo().get(this.mazoAbajo.getMazo().size()-1).getPalo() == carta.getPalo())) {
+			resultado = true;
+			
+		}
+		
+		return resultado;
+		
+	}
+	
 	public void tirarCarta(int indice) {
 		Carta cartaAuxiliar;
-		if ((indice > 0)&&(indice < this.jugadores.get(this.jugadorActual).getCantidadCartas())){
-		
-			cartaAuxiliar = this.jugadores.get(this.jugadorActual).tirarCarta(indice - 1);
+		cartaAuxiliar = this.jugadores.get(this.jugadorActual).obtenerCarta(indice - 1);
+		if ((indice > 0)&&(indice < this.jugadores.get(this.jugadorActual).getCantidadCartas()) && (this.cartaArribaMazoAbajo(cartaAuxiliar))){
+			this.jugadores.get(this.jugadorActual).tirarCarta(indice - 1);
 			this.mazoAbajo.agregarCarta(cartaAuxiliar);
 		}
-		else {this.notificar(Eventos.CARTA_INEXISTENTE);}
+		else {
+			if ((indice <= 0)&&(indice >= this.jugadores.get(this.jugadorActual).getCantidadCartas())){
+				this.notificar(Eventos.CARTA_INEXISTENTE);
+				}
+			else if (!(this.cartaArribaMazoAbajo(cartaAuxiliar))){
+				this.notificar(Eventos.CARTA_NO_COINCIDENTE);
+				
+				}
+		}
 	}
 	
 	public boolean terminaRonda() {
