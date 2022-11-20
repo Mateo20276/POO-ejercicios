@@ -26,10 +26,32 @@ public class VistaConsola {
 		System.out.println("a - Mirar cartas");
 		System.out.println("b - Tirar carta");
 	}
+	
+	public void menuInicial() {
+		System.out.println("########################");
+		System.out.println("####### JODETE #######");
+		System.out.println("########################");
+		System.out.println();	
+		System.out.println();
+		System.out.println("Escriba la cantidad de jugadores (2 a 6)");
+		
+			
+		
+	}
 		
 	public void iniciar() {
 		boolean salir = false;
 		boolean pasa = false;
+		while (!salir) {
+			this.menuInicial();
+			String cant = this.entrada.nextLine();
+			if (this.cantidadJugadores(Integer.parseInt(cant))) {
+				salir = true;
+
+			}
+		}
+			salir = false;
+			
 		while(!salir) {
 			this.menuPrincipal();
 			if (pasa) {
@@ -49,19 +71,28 @@ public class VistaConsola {
 					break;
 					
 				case "c":;
-					this.controlador.pasarJugador();
+					this.pasarJugador();
 					pasa = false;
 					break;
 					
 				default:
 					System.out.println("Opción no válida.");
 			}
-		}
+		}	
 	}
 	
 	
+	private boolean  cantidadJugadores(int cant) {
+		return this.controlador.cantidadJugadores(cant);
+		
+	}
+
 	private void tirarCarta(int indice) {
 		this.controlador.tirarCarta(indice);
+	}
+	
+	private void pasarJugador() {
+		this.controlador.pasarJugador();
 	}
 	
 	private String verCartas(){

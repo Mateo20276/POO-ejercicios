@@ -9,6 +9,7 @@ import ar.edu.unlu.observer.*;
 
 public class Juego implements Observable {
 	private List<Observador> observadores;
+
 	
 	private int jugadorInicial;
 	
@@ -26,11 +27,10 @@ public class Juego implements Observable {
 	
 	
 	
-	public Juego(int numeroJugadores) {
+	public Juego() {
 		super();
 		setJugadorInicial(0);
 		setJugadorActual(getJugadorInicial());
-		this.numeroJugadores = numeroJugadores;
 		this.observadores = new ArrayList<>();
 		jugadores = new ArrayList<>();		
 		Mazo mazoarriba = new Mazo();
@@ -39,7 +39,6 @@ public class Juego implements Observable {
 		setMazoArriba(mazoarriba);
 		Mazo mazoabajo = new Mazo();
 		setMazoAbajo(mazoabajo);
-		cargarJugadores();
 		
 	}
 
@@ -68,6 +67,19 @@ public class Juego implements Observable {
 			jugadores.add(new Jugador(repartirCartaJugador(this.numeroJugadores).get(i).getMazo()));
 		}
 
+	}
+	
+	public boolean cantidadJugadores(int cant) {
+		boolean veri = true;
+		if ((cant>1)&&(cant<7)) {
+			this.numeroJugadores = cant;
+			cargarJugadores();
+		}
+		else {
+			veri = false;
+		}
+		return veri;
+		
 	}
 	
 	public void tirarCarta(int indice) {

@@ -55,6 +55,11 @@ public class Controlador implements Observador {
 		
 	}
 
+	public boolean cantidadJugadores(int cant) {
+		return this.modelo.cantidadJugadores(cant);
+		
+	}
+
 		
 }
 	
