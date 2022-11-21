@@ -24,7 +24,6 @@ public class VistaConsola {
 		System.out.println();
 		System.out.println("Selecciona una opción:");
 		System.out.println("a - Mirar cartas");
-		System.out.println("b - Tirar carta");
 	}
   
 	public void menuInicial() {
@@ -42,6 +41,7 @@ public class VistaConsola {
 	public void iniciar() {
 		boolean salir = false;
 		boolean pasa = false;
+		boolean opcionb = true;
 		while (!salir) {
 			this.menuInicial();
 			String cant = this.entrada.nextLine();
@@ -54,6 +54,9 @@ public class VistaConsola {
 			
 		while(!salir) {
 			this.menuPrincipal();
+			if (opcionb) {	
+				System.out.println("b - Tirar carta");
+			}
 			if (pasa) {
 				System.out.println("c - Terminar turno");
 			}
@@ -65,14 +68,22 @@ public class VistaConsola {
 					break;
 					
 				case "b":
+					if(!opcionb){System.out.println("Opción no válida.");break;}
 					System.out.println("Seleccione carta a tirar");
 					String carta = this.entrada.nextLine();
-					this.tirarCarta(Integer.parseInt(carta));
+					opcionb = false;
+					if (!this.tirarCarta(Integer.parseInt(carta))) {						
+						pasa = false;
+						opcionb = true;
+					}
+
 					break;
 					
-				case "c":;
+				case "c":
+					if (!pasa) {System.out.println("Opción no válida.");break;}
 					this.pasarJugador();
 					pasa = false;
+					opcionb = true;
 					break;
 					
 				default:
@@ -87,8 +98,8 @@ public class VistaConsola {
 		
 	}
 
-	private void tirarCarta(int indice) {
-		this.controlador.tirarCarta(indice);
+	private boolean tirarCarta(int indice) {
+		return this.controlador.tirarCarta(indice);
 	}
 	
 	private void pasarJugador() {

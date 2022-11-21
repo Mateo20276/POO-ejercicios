@@ -2,7 +2,7 @@ package ar.edu.unlu.baraja;
 
 public enum Palo {
 	BASTO,
-	ESTAPA,
+	ESPADA,
 	ORO,
 	COPA,
 	COMODIN

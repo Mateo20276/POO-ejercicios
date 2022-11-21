@@ -20,11 +20,12 @@ public class Controlador implements Observador {
 
 	}
 	
-	public void tirarCarta(int indice) {
-		this.modelo.tirarCarta(indice);
+	public boolean  tirarCarta(int indice) {
+		boolean resultado =  this.modelo.tirarCarta(indice);
 		if (this.modelo.terminaRonda()) {
 			this.modelo.cambioJugadorInicial();
 		}
+		return resultado;
 	}
 	
 	

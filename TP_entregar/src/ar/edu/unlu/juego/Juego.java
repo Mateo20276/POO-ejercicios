@@ -98,22 +98,29 @@ public class Juego implements Observable {
 		
 	}
 	
-	public void tirarCarta(int indice) {
+	public boolean tirarCarta(int indice) {
 		Carta cartaAuxiliar;
-		cartaAuxiliar = this.jugadores.get(this.jugadorActual).obtenerCarta(indice - 1);
-		if ((indice > 0)&&(indice < this.jugadores.get(this.jugadorActual).getCantidadCartas()) && (this.cartaArribaMazoAbajo(cartaAuxiliar))){
-			this.jugadores.get(this.jugadorActual).tirarCarta(indice - 1);
-			this.mazoAbajo.agregarCarta(cartaAuxiliar);
+		boolean resultado = false;
+		short opcion = '1';
+		if ((indice > 0)&&(indice < this.jugadores.get(this.jugadorActual).getCantidadCartas())) {
+			opcion = '2';
+			cartaAuxiliar = this.jugadores.get(this.jugadorActual).obtenerCarta(indice - 1);
+			if (this.cartaArribaMazoAbajo(cartaAuxiliar)){
+				this.jugadores.get(this.jugadorActual).tirarCarta(indice - 1);
+				this.mazoAbajo.agregarCarta(cartaAuxiliar);
+				resultado = true;
+				opcion = '3';
+			}
 		}
-		else {
-			if ((indice <= 0)&&(indice >= this.jugadores.get(this.jugadorActual).getCantidadCartas())){
-				this.notificar(Eventos.CARTA_INEXISTENTE);
-				}
-			else if (!(this.cartaArribaMazoAbajo(cartaAuxiliar))){
-				this.notificar(Eventos.CARTA_NO_COINCIDENTE);
-				
-				}
+
+		if (opcion == '1'){
+			this.notificar(Eventos.CARTA_INEXISTENTE);
+			}
+		else if (opcion == '2'){
+			this.notificar(Eventos.CARTA_NO_COINCIDENTE);
+								
 		}
+		return resultado;
 	}
 	
 	public boolean terminaRonda() {
