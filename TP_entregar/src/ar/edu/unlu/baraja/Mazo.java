@@ -62,11 +62,14 @@ public class Mazo implements Cloneable {
 	}
 
 	public void pasarCartasDeUnMazo(Mazo mazo) {
-		mazo.mezclar();
-		for (int i = 0; i < mazo.getMazo().size(); i++) {
+		Carta carta = null;
+		for (int i = 0; i < mazo.getMazo().size() - 1; i++) {
 			this.agregarCarta(mazo.getMazo().get(i));		
 		}
+		this.mezclar();
+		carta = mazo.getMazo().get(mazo.getMazo().size());
 		mazo.limpiarMazo();		
+		mazo.agregarCarta(carta);
 	}
 	
 	public boolean tamanioIgualCero() {
@@ -76,7 +79,9 @@ public class Mazo implements Cloneable {
 		return resultado;
 	}
 			
-
+	public Carta obtenerUltimaCarta() {
+		return (this.getMazo().get(this.getMazo().size()-1));
+	}
 
 }
 

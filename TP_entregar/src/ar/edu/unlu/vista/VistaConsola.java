@@ -3,6 +3,7 @@ package ar.edu.unlu.vista;
 import java.util.Scanner;
 
 import ar.edu.unlu.baraja.Carta;
+import ar.edu.unlu.baraja.Palo;
 import ar.edu.unlu.controlador.*;
 
 public class VistaConsola {
@@ -44,6 +45,7 @@ public class VistaConsola {
 		boolean opcionb = true;
 		boolean opcionc = true;
 		boolean opciond = false;
+		boolean opcionf = false;
 
 		while (!salir) {
 			this.menuInicial();
@@ -75,6 +77,9 @@ public class VistaConsola {
 				System.out.println("d - Terminar turno");
 			}
 			System.out.println("e - Cantar jodete");
+			if (opcionf) {
+				System.out.println("f - Cambiar de palo");
+			}
 			String opcion = this.entrada.nextLine();
 			if (opcion.equals("b")) {opciond = true;}
 			switch (opcion.toLowerCase()) {
@@ -89,11 +94,19 @@ public class VistaConsola {
 					String carta = this.entrada.nextLine();
 					opcionb = false;
 					opcionc = false;
-					if (this.tirarCarta(Integer.parseInt(carta)) == null) {											
+					Carta cartaax = this.tirarCarta(Integer.parseInt(carta));
+					if (cartaax == null) {											
 						opcionb = true;
 						opcionc = true;
 						opciond = false;
-					}
+						}
+					else if (cartaax.getNumero() == 10) {
+						opcionb = false;
+						opcionc = false;
+						opciond = false;
+						opcionf = true;
+						}
+					
 
 					break;
 					
@@ -119,8 +132,16 @@ public class VistaConsola {
 				case "e":
 					this.cantarJodete();
 					break;
-					
-					
+				
+				case "f":
+					if (!opcionf) {System.out.println("Opción no válida.");break;}
+					System.out.println("A que palo desea cambiar (e,o,c,b)");
+					String option = this.entrada.nextLine();
+					this.cambioPalo(option);
+					opcionf = false;
+					opciond = true;
+					break;
+			
 				default:
 					System.out.println("");
 					System.out.println("Opción no válida.");
@@ -164,6 +185,10 @@ public class VistaConsola {
 	
 	private String verCartas(){
 		return this.controlador.verCartas();
+	}
+	
+	private void cambioPalo(String p) {
+		this.controlador.cambiarPalo(p);
 	}
 	
 	public void setControlador(Controlador controlador) {
@@ -245,6 +270,12 @@ public class VistaConsola {
 		System.out.println("Carta especial 12 tirada");
 	}
 
+
+
+	public void mostrarCambioColor(Palo palo) {
+		System.out.println("El palo a sido cambiado a: " + palo);
+		
+	}
 
 
 

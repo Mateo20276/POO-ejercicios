@@ -1,6 +1,7 @@
 package ar.edu.unlu.controlador;
 
 import ar.edu.unlu.baraja.Carta;
+import ar.edu.unlu.baraja.Palo;
 import ar.edu.unlu.juego.*;
 import ar.edu.unlu.jugador.*;
 import ar.edu.unlu.observer.*;
@@ -77,7 +78,10 @@ public class Controlador implements Observador {
 			case CARTA_ESPECIAL_12:
 				this.vista.mostrarCaraEspecial12();
 				break;
-				
+			case CAMBIO_COLOR:
+				Palo palo = this.modelo.getMazoAbajo().obtenerUltimaCarta().getPalo();
+				this.vista.mostrarCambioColor(palo);
+				break;
 
 			}
 		}
@@ -120,6 +124,10 @@ public class Controlador implements Observador {
 		
 	public Carta  tirarCarta(int indice) {
 		return  this.modelo.tirarCarta(indice);
+	}
+	
+	public void cambiarPalo(String p) {
+		this.modelo.cartaComodin10(p);
 	}
 }
 	

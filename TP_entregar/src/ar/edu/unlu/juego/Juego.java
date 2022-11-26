@@ -11,7 +11,8 @@ public class Juego implements Observable {
 	private final int numeroMaximoJugadores = 6;
 	
 	private final int numeroMinimoJugadores = 2;
-
+	
+	private Palo paloCarta10 = null;
 	
 	
 	private List<Observador> observadores;
@@ -82,7 +83,7 @@ public class Juego implements Observable {
 	
 	public boolean cantidadJugadores(int cant) {
 		boolean veri = true;
-		if ((cant >= numeroMinimoJugadores) && (cant <= 59)) {
+		if ((cant >= numeroMinimoJugadores) && (cant <= numeroMaximoJugadores)) {
 			this.numeroJugadores = cant;
 			cargarJugadores();
 			this.notificar(Eventos.CANTIDAD_JUGADORES);
@@ -100,18 +101,13 @@ public class Juego implements Observable {
 		if(this.mazoAbajo.tamanioIgualCero()) {
 			resultado = true;
 		}
-		
-		else if ((this.mazoAbajo.getMazo().get(this.mazoAbajo.getMazo().size()-1).getNumero()) == 10){
-			if (this.mazoAbajo.getMazo().get(this.mazoAbajo.getMazo().size()-1).getPalo() == carta.getPalo()){
+
+		else if ((this.mazoAbajo.obtenerUltimaCarta().getNumero() == carta.getNumero()) || (this.mazoAbajo.obtenerUltimaCarta()).getPalo() == carta.getPalo()) {
+			if (!(this.paloCarta10 == null)){this.setPaloCarta10(null);}
 			resultado = true;
-			}
 		}
 		
-		else { 
-			if ((this.mazoAbajo.getMazo().get(this.mazoAbajo.getMazo().size()-1).getNumero() == carta.getNumero()) || (this.mazoAbajo.getMazo().get(this.mazoAbajo.getMazo().size()-1).getPalo() == carta.getPalo())) {
-			resultado = true;
-			}
-		}
+		
 		
 		return resultado;
 		
@@ -144,8 +140,11 @@ public class Juego implements Observable {
 			else if (cartaAuxiliar.getNumero() == 10) {
 				opcionespecial = "10";
 				}
-			}
-						
+			else if (cartaAuxiliar.getNumero() == 7) {
+				cartaAuxiliar = null;
+				opcionespecial = "7";
+				}
+			}						
 		}
 
 		if (opcion == '1'){
@@ -153,12 +152,15 @@ public class Juego implements Observable {
 			}
 		else if (opcion == '2'){
 			this.notificar(Eventos.CARTA_NO_COINCIDENTE);
+			cartaAuxiliar = null;
 								
 		}
 		else if (opcion == '3') {
 			this.notificar(Eventos.CARTA_TIRADA_CORRECTAMENTE);
 			
 			if (opcionespecial == "0") {this.notificar(Eventos.CARTA_TIRADA_NORMAL);}
+			
+			else if (opcionespecial == "7") {this.notificar(Eventos.CARTA_ESPECIAL_7);}
 			
 			else if (opcionespecial == "10") {this.notificar(Eventos.CARTA_ESPECIAL_10);}
 			
@@ -217,6 +219,11 @@ public class Juego implements Observable {
 		this.sentidoJuego = sentidoJuego;
 	}
 
+	public void cartaComodin10(String p) {
+		this.setPaloCarta10(this.mazoAbajo.obtenerUltimaCarta().cambiarUnPalo(p)); 
+		this.notificar(Eventos.CAMBIO_COLOR);
+		
+	}
 
 	public String mostrarManoJugador() {
 		String cadena = "";
@@ -224,8 +231,7 @@ public class Juego implements Observable {
 		for (Carta carta : this.jugadores.get(jugadorActual).getMano()) {
 			
 			cadena =cadena + (i++) +" - " + carta.toString() + "\n";
-			
-			
+					
 		}
 		return cadena;
 	}
@@ -233,7 +239,7 @@ public class Juego implements Observable {
 	public String mostrarCartaMazoAbajo() {
 		String carta = "";
 		if(!(this.mazoAbajo.tamanioIgualCero())) {
-			carta = "Carta boca arriba: " + this.mazoAbajo.getMazo().get(this.mazoAbajo.getMazo().size()-1).toString();}
+			carta = "Carta boca arriba: " + this.mazoAbajo.obtenerUltimaCarta().toString();}
 		return (carta);
 	}
 	
@@ -374,5 +380,7 @@ public class Juego implements Observable {
 		this.numeroJugadores = numeroJugadores;
 	}
 
-	
+	private void setPaloCarta10(Palo palo) {
+		this.paloCarta10 = palo;
+	}
 }

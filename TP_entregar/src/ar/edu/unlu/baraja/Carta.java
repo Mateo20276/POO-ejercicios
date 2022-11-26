@@ -15,7 +15,31 @@ public class Carta{
 		
 	}
 	
-	 	
+	public Palo cambiarUnPalo(String p) {
+		Palo palo = null;
+		Palo paloguardar = this.getPalo();
+		switch (p.toLowerCase()) {
+		case "c":
+			palo = Palo.COPA;
+			break;
+			
+		case "o":
+			palo = Palo.ORO;
+			break;
+			
+		case "e":
+			palo = Palo.ESPADA;
+			break;
+			
+		case "b":
+			palo = Palo.BASTO;
+			break;
+		}
+		this.setPalo(palo);
+		
+		return paloguardar;
+		
+	}
 
 	public int getNumero() {
 		return numero;
@@ -30,7 +54,7 @@ public class Carta{
 		return palo;
 	}
 
-	private void setPalo(Palo palo) {
+	public void setPalo(Palo palo) {
 		this.palo = palo;
 	}
 	
