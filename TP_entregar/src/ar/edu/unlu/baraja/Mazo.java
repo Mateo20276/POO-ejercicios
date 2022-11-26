@@ -2,7 +2,7 @@ package ar.edu.unlu.baraja;
 
 import java.util.ArrayList;
 
-public class Mazo {
+public class Mazo implements Cloneable {
 	private ArrayList<Carta> mazo;
 
 	
@@ -19,8 +19,8 @@ public class Mazo {
 				this.agregarCarta(new Carta(j,palo,c++));				
 			}
 		}
-		this.agregarCarta(new Carta(0,Palo.COMODIN,49));
-		this.agregarCarta(new Carta(0,Palo.COMODIN,50));
+		this.agregarCarta(new Carta(0,null,49));
+		this.agregarCarta(new Carta(0,null,50));
 
 	}
 	
@@ -53,14 +53,30 @@ public class Mazo {
 		this.mazo.remove(indice);
 	}
 
-
-
-	public static void main(String[] args) {
-		Mazo mazo= new Mazo();
-		mazo.generarMazo();
-		mazo.mezclar();
+	public void limpiarMazo() {
+		if (!(this.mazo.size() == 0)) {
 		
-		System.out.println(mazo);
+			this.mazo.clear();		
+		}
 		
 	}
+
+	public void pasarCartasDeUnMazo(Mazo mazo) {
+		mazo.mezclar();
+		for (int i = 0; i < mazo.getMazo().size(); i++) {
+			this.agregarCarta(mazo.getMazo().get(i));		
+		}
+		mazo.limpiarMazo();		
+	}
+	
+	public boolean tamanioIgualCero() {
+		boolean resultado = false;
+		if (this.getMazo().size() == 0){resultado = true;}
+				
+		return resultado;
+	}
+			
+
+
 }
+

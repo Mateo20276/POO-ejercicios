@@ -1,17 +1,18 @@
 package ar.edu.unlu.baraja;
 
-public class Carta {
+public class Carta{
 	private int numero;//comodines (numero y palo = 0)
 	
 	private Palo palo;// (palo 1 = espada), (palo 2 = basto), (palo 3 = oro), (palo 4 = copa).
 
 	private int id;
-	
+		
 	public Carta(int numero, Palo palo, int id) {
 		super();
 		this.setNumero(numero);
 		this.setPalo(palo);
 		this.setId(id);
+		
 	}
 	
 	 	
@@ -43,7 +44,7 @@ public class Carta {
 	
 	@Override
 	public String toString() {
-		return "Carta [numero=" + numero + ", palo=" + palo + ", id=" + id + "]" + "\n";
+		return "[numero=" + numero + ", palo=" + palo + ", id=" + id + "]" + "\n";
 	}
  
 	

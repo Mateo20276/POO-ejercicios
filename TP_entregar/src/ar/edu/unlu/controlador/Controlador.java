@@ -1,5 +1,6 @@
 package ar.edu.unlu.controlador;
 
+import ar.edu.unlu.baraja.Carta;
 import ar.edu.unlu.juego.*;
 import ar.edu.unlu.jugador.*;
 import ar.edu.unlu.observer.*;
@@ -20,18 +21,7 @@ public class Controlador implements Observador {
 
 	}
 	
-	public boolean  tirarCarta(int indice) {
-		boolean resultado =  this.modelo.tirarCarta(indice);
-		if (this.modelo.terminaRonda()) {
-			this.modelo.cambioJugadorInicial();
-		}
-		return resultado;
-	}
-	
-	
-	
-	
-	
+			
 	@Override
 	public void actualizar(Object evento, Observable observado) {
 
@@ -45,7 +35,50 @@ public class Controlador implements Observador {
 				this.vista.mostrarCartaNoCoincidente();
 				break;
 			
+			case CANTIDAD_JUGADORES:
+				int cantidad = this.modelo.getNumeroJugadores();
+				this.vista.mostrarCantidadJugadores(cantidad);
+				break;
+				
+			case COMIENZA_EL_JUEGO:
+				this.vista.mostrarComienzoJuego();
+				break;
 			
+			case CAMBIAR_JUGADOR:
+				String nombre = this.modelo.getNombreJugadorActual();
+				this.vista.mostrarCambioJugador(nombre);			
+				break;
+			
+			case NO_ES_POSIBLE_ROBAR_CARTAS:
+				this.vista.mostrarNoSePuedeRobarCartas();
+				break;
+			
+			case CAMBIAR_RONDA:
+				this.vista.mostrarCambioRonda();
+				break;
+				
+			case CARTA_TIRADA_CORRECTAMENTE:	
+				this.vista.mostrarCartaTiradaCorrectamente();
+				break;
+
+				
+			case CARTA_TIRADA_NORMAL:
+				this.vista.mostrarCartaNormal();
+				break;
+				
+			case CARTA_ESPECIAL_10:
+				this.vista.mostrarCartaEspecial();
+				break;
+				
+			case CARTA_ESPECIAL_11:
+				this.vista.mostrarCaraEspecial11();
+				break;
+				
+			case CARTA_ESPECIAL_12:
+				this.vista.mostrarCaraEspecial12();
+				break;
+				
+
 			}
 		}
 	}
@@ -56,8 +89,11 @@ public class Controlador implements Observador {
 	}
 
 	public void pasarJugador() {
-		this.modelo.cambiojugadorActual();
 		
+		if (this.modelo.terminaRonda()) {
+			this.modelo.cambioJugadorInicial();
+		}
+		else{this.modelo.cambiojugadorActual();}		
 	}
 
 	public boolean cantidadJugadores(int cant) {
@@ -65,7 +101,26 @@ public class Controlador implements Observador {
 		
 	}
 
+	public String verCartaMazoAbajo() {
+		return this.modelo.mostrarCartaMazoAbajo();
+	}
+	
+	public boolean robarCarta(){
+		return this.modelo.robarCarta();
+	}
+
+	public void cargarNombreJugadores(String nombre, int i) {
+		this.modelo.cargarNombreJugadores(nombre,i);
+	}
+
+	public void cantarJodete() {
+		this.modelo.cantoJodete();
 		
+	}
+		
+	public Carta  tirarCarta(int indice) {
+		return  this.modelo.tirarCarta(indice);
+	}
 }
 	
 	

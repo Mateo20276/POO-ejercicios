@@ -9,6 +9,10 @@ public class Jugador {
 	private ArrayList<Carta> mano;
 	
 	private int puntos = 0;
+	
+	private String nombre;
+	
+	private boolean jodete = false;
 		
 	
 	public Jugador( ArrayList<Carta> mano) {
@@ -21,8 +25,7 @@ public class Jugador {
 	public Carta tirarCarta(int indice) {
 		Carta carta = obtenerCarta(indice);
 		eliminarCartaMano(indice);		
-		
-		
+			
 		return carta;
 	}
 	
@@ -31,6 +34,32 @@ public class Jugador {
 		return carta;
 		
 	}
+	
+	public boolean jodete() {
+		boolean resultado = false;
+		if (this.mano.size() == 1) {
+			resultado = true;
+		}
+		
+		return resultado;		
+	}
+	
+	public boolean cantidadCartasCero() {
+		boolean resultado = false;
+		if (this.getCantidadCartas() == 0) {
+			resultado = true;			
+		}
+		return resultado;
+	}
+	public void limpiarMazoJugador() {
+		this.mano.clear();
+	}
+	
+	public void sumarCarta(Carta carta) {
+		this.mano.add(carta);
+	
+	}
+	
 	public int getCantidadCartas() {
 		return mano.size();
 	}
@@ -54,5 +83,24 @@ public class Jugador {
 
 	public void setPuntos(int puntos) {
 		this.puntos = puntos;
+	}
+
+
+	public String getNombre() {
+		return nombre;
+	}
+
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	
+	public void setJodete(boolean jodete) {
+		this.jodete = jodete;
+	}
+
+
+	public boolean getJodete() {
+		return this.jodete;
 	}
 }
