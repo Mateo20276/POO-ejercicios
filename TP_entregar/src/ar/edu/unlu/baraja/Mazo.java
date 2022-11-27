@@ -24,6 +24,10 @@ public class Mazo implements Cloneable {
 
 	}
 	
+	public void cargarMazo() {
+		this.generarMazo();
+		this.mezclar();
+	}
 	
 	public ArrayList<Carta> getMazo() {
 		return mazo;

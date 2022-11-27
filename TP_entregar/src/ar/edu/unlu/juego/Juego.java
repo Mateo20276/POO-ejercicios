@@ -32,7 +32,6 @@ public class Juego implements Observable {
 	private int sentidoJuego = 1;
 	
 	
-	
 	public Juego() {
 		super();
 		setJugadorInicial(0);
@@ -41,13 +40,9 @@ public class Juego implements Observable {
 		jugadores = new ArrayList<>();	
 		mazoArriba = new Mazo();
 		mazoAbajo = new Mazo();
-		this.generarMazoArriba();
+		this.mazoArriba.cargarMazo();
 		
 	}
-
-
-
-
 
 	private ArrayList<Mazo> repartirCartaJugador(Integer numero) { 
 		ArrayList<Mazo> mazoJugadores = new ArrayList<>();
@@ -91,8 +86,7 @@ public class Juego implements Observable {
 		else {
 			veri = false;
 		}
-		return veri;
-		
+		return veri;		
 	}
 	
 	private boolean cartaArribaMazoAbajo(Carta carta) {
@@ -103,14 +97,11 @@ public class Juego implements Observable {
 		}
 
 		else if ((this.mazoAbajo.obtenerUltimaCarta().getNumero() == carta.getNumero()) || (this.mazoAbajo.obtenerUltimaCarta()).getPalo() == carta.getPalo()) {
-			if (!(this.paloCarta10 == null)){this.setPaloCarta10(null);}
+			if (!(carta.getcambioPalo() == null)){carta.setPalo(carta.getcambioPalo());carta.setcambioPalo(null);}
 			resultado = true;
 		}
-		
-		
-		
-		return resultado;
-		
+				
+		return resultado;		
 	}
 	
 	public Carta tirarCarta(int indice) {
@@ -145,9 +136,8 @@ public class Juego implements Observable {
 				opcionespecial = "7";
 				}
 			else if (cartaAuxiliar.getNumero() == 4) {
-				opcionespecial = "4";
-				
-			}
+				opcionespecial = "4";			
+				}
 			}						
 		}
 
@@ -156,8 +146,7 @@ public class Juego implements Observable {
 			}
 		else if (opcion == '2'){
 			this.notificar(Eventos.CARTA_NO_COINCIDENTE);
-			cartaAuxiliar = null;
-								
+			cartaAuxiliar = null;								
 		}
 		else if (opcion == '3') {
 			this.notificar(Eventos.CARTA_TIRADA_CORRECTAMENTE);
@@ -201,9 +190,8 @@ public class Juego implements Observable {
 		for (Jugador jugador : this.jugadores) {
 			jugador.cantidadCartasCero();
 		}
-		this.generarMazoArriba();
-		this.notificar(Eventos.CAMBIAR_RONDA);
-		
+		this.mazoArriba.cargarMazo();
+		this.notificar(Eventos.CAMBIAR_RONDA);		
 	}
 	
 	public void cambiojugadorActual(boolean cambio) {
@@ -213,9 +201,7 @@ public class Juego implements Observable {
 		if (jugadorAct == -1) {setJugadorActual(this.numeroJugadores - 1);}
 		else if (jugadorAct < this.numeroJugadores) {setJugadorActual(jugadorAct);}
 		else {setJugadorActual(0);}
-		if (cambio) {this.notificar(Eventos.CAMBIAR_JUGADOR);}
-
-		
+		if (cambio) {this.notificar(Eventos.CAMBIAR_JUGADOR);}		
 	}
 
 	public int getSentidoJuego() {
@@ -227,18 +213,15 @@ public class Juego implements Observable {
 	}
 
 	public void cartaComodin10(String p) {
-		this.setPaloCarta10(this.mazoAbajo.obtenerUltimaCarta().cambiarUnPalo(p)); 
-		this.notificar(Eventos.CAMBIO_COLOR);
-		
+		this.mazoAbajo.obtenerUltimaCarta().setcambioPalo(this.mazoAbajo.obtenerUltimaCarta().cambiarUnPalo(p)); 
+		this.notificar(Eventos.CAMBIO_COLOR);		
 	}
 
 	public String mostrarManoJugador() {
 		String cadena = "";
 		int i = 1;
-		for (Carta carta : this.jugadores.get(jugadorActual).getMano()) {
-			
-			cadena =cadena + (i++) +" - " + carta.toString() + "\n";
-					
+		for (Carta carta : this.jugadores.get(jugadorActual).getMano()) {			
+			cadena =cadena + (i++) +" - " + carta.toString() + "\n";					
 		}
 		return cadena;
 	}
@@ -254,10 +237,6 @@ public class Juego implements Observable {
 		return jugadores;
 	}
 
-	private void generarMazoArriba() {
-		mazoArriba.generarMazo();
-		mazoArriba.mezclar();
-	};
 	
 	public void setJugadores(ArrayList<Jugador> jugadores) {
 		this.jugadores = jugadores;
@@ -270,8 +249,7 @@ public class Juego implements Observable {
 			if (!this.mazoAbajo.tamanioIgualCero()) {
 				this.mazoArriba.pasarCartasDeUnMazo(mazoAbajo);
 			}
-		}	
-		
+		}			
 		else {resultado = false;
 				this.notificar(Eventos.NO_ES_POSIBLE_ROBAR_CARTAS);}	
 	
@@ -280,18 +258,15 @@ public class Juego implements Observable {
 			this.mazoArriba.eliminarCarta(0);	
 		}
 		
-		return resultado;
-		
+		return resultado;		
 	}
 	
 	public void cargarNombreJugadores(String nombre, int i) {
-
 			this.jugadores.get(i).setNombre(nombre);
 			
 			if ((i+1) == this.numeroJugadores) {
 				this.notificar(Eventos.COMIENZA_EL_JUEGO);
-			}
-		
+			}		
 	}
 	
 	public void cantarJodete() {
@@ -306,82 +281,46 @@ public class Juego implements Observable {
 		if (this.jugadores.get(this.jugadorActual).jodete()) {
 			this.jugadores.get(this.jugadorActual).setJodete(true);			
 		}
-		else {cantarJodete();}
-		
+		else {cantarJodete();}		
 	}
 
 	public String getNombreJugadorActual() {
 		return this.jugadores.get(jugadorActual).getNombre();
 	}
-	
-	
-	public Mazo getMazoArriba() {
-		return mazoArriba;
-	}
-
-
-
-	public void setMazoArriba(Mazo mazoArriba) {
-		this.mazoArriba = mazoArriba;
-	}
-
-
 
 	public Mazo getMazoAbajo() {
 		return mazoAbajo;
 	}
-
-
-
-	public void setMazoAbajo(Mazo mazoAbajo) {
-		this.mazoAbajo = mazoAbajo;
-	}
-	
-	
+		
 	public int getJugadorInicial() {
 		return jugadorInicial;
 	}
-
-
 
 	public void setJugadorInicial(int jugaroInicial) {
 		this.jugadorInicial = jugaroInicial;
 	}
 
-
-
 	public int getJugadorActual() {
 		return jugadorActual;
 	}
-
-
 
 	public void setJugadorActual(int jugadorActual) {
 		this.jugadorActual = jugadorActual;
 	}
 
-
-
-	@Override
 	public void agregadorObservador(Observador observador) {
 		this.observadores.add(observador);
 	}
 
-
-
-	@Override
 	public void notificar(Object evento) {
 		for (Observador observador : this.observadores) {
 			observador.actualizar(evento, this);
 		}
 	}
 
-
 	public int getNumeroJugadores() {
 		return numeroJugadores;
 	}
-
-
 
 	public void setNumeroJugadores(int numeroJugadores) {
 		this.numeroJugadores = numeroJugadores;

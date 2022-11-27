@@ -160,8 +160,6 @@ public class VistaConsola {
 		
 	}
 
-
-
 	private boolean  robarCarta() {
 		return this.controlador.robarCarta();
 	}

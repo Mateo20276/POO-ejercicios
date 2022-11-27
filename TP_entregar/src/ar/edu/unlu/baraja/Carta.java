@@ -6,6 +6,8 @@ public class Carta{
 	private Palo palo;// (palo 1 = espada), (palo 2 = basto), (palo 3 = oro), (palo 4 = copa).
 
 	private int id;
+	
+	private Palo cambioPalo = null;
 		
 	public Carta(int numero, Palo palo, int id) {
 		super();
@@ -66,6 +68,13 @@ public class Carta{
 		this.id = id;
 	}
 	
+	public void setcambioPalo(Palo palo) {
+		this.cambioPalo = palo;
+	}
+	
+	public Palo getcambioPalo() {
+		return this.cambioPalo;
+	}
 	@Override
 	public String toString() {
 		return "[numero=" + numero + ", palo=" + palo + ", id=" + id + "]" + "\n";
