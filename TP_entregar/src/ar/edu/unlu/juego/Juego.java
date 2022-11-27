@@ -144,6 +144,10 @@ public class Juego implements Observable {
 				cartaAuxiliar = null;
 				opcionespecial = "7";
 				}
+			else if (cartaAuxiliar.getNumero() == 4) {
+				opcionespecial = "4";
+				
+			}
 			}						
 		}
 
@@ -159,6 +163,8 @@ public class Juego implements Observable {
 			this.notificar(Eventos.CARTA_TIRADA_CORRECTAMENTE);
 			
 			if (opcionespecial == "0") {this.notificar(Eventos.CARTA_TIRADA_NORMAL);}
+			
+			else if (opcionespecial == "4") {this.notificar(Eventos.CARTA_ESPECIAL_4);this.cambiojugadorActual(false);this.cambiojugadorActual(true);}
 			
 			else if (opcionespecial == "7") {this.notificar(Eventos.CARTA_ESPECIAL_7);}
 			
@@ -200,14 +206,15 @@ public class Juego implements Observable {
 		
 	}
 	
-	public void cambiojugadorActual() {
+	public void cambiojugadorActual(boolean cambio) {
 		int jugadorAct;
 		jugadorAct = this.jugadorActual + this.getSentidoJuego();
 		this.jugadores.get(this.jugadorActual).setJodete(false);
 		if (jugadorAct == -1) {setJugadorActual(this.numeroJugadores - 1);}
 		else if (jugadorAct < this.numeroJugadores) {setJugadorActual(jugadorAct);}
 		else {setJugadorActual(0);}
-		this.notificar(Eventos.CAMBIAR_JUGADOR);
+		if (cambio) {this.notificar(Eventos.CAMBIAR_JUGADOR);}
+
 		
 	}
 

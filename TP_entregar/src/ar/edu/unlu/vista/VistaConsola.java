@@ -106,8 +106,12 @@ public class VistaConsola {
 						opciond = false;
 						opcionf = true;
 						}
-					
-
+					else if (cartaax.getNumero() == 4) {
+						opcionb = true;
+						opcionc = true;
+						opciond = false;
+						opcionf = false;
+						}
 					break;
 					
 				case "c":
@@ -250,13 +254,16 @@ public class VistaConsola {
 		System.out.println("Carta tirada correctamente");		
 	}
 
-
-
 	public void mostrarCartaNormal() {
 		System.out.println("Carta normal tirada");
 	}
 	
-	public void mostrarCartaEspecial() {
+	public void mostrarCartaEspecial4() {
+		System.out.println("Carta especial 4 tirada");
+		
+	}
+	
+	public void mostrarCartaEspecial10() {
 		System.out.println("Carta especial 10 tirada");
 		
 	}
@@ -276,6 +283,8 @@ public class VistaConsola {
 		System.out.println("El palo a sido cambiado a: " + palo);
 		
 	}
+
+
 
 
 

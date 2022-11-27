@@ -67,8 +67,12 @@ public class Controlador implements Observador {
 				this.vista.mostrarCartaNormal();
 				break;
 				
+			case CARTA_ESPECIAL_4:
+				this.vista.mostrarCartaEspecial4();
+				break;
+				
 			case CARTA_ESPECIAL_10:
-				this.vista.mostrarCartaEspecial();
+				this.vista.mostrarCartaEspecial10();
 				break;
 				
 			case CARTA_ESPECIAL_11:
@@ -97,7 +101,7 @@ public class Controlador implements Observador {
 		if (this.modelo.terminaRonda()) {
 			this.modelo.cambioJugadorInicial();
 		}
-		else{this.modelo.cambiojugadorActual();}		
+		else{this.modelo.cambiojugadorActual(true);}		
 	}
 
 	public boolean cantidadJugadores(int cant) {
