@@ -78,8 +78,7 @@ public class Carta implements ICarta{
 	public Carta(int numero, Palo palo) {
 		super();
 		this.setNumero(numero);
-		this.setPalo(palo);
-		
+		this.setPalo(palo);		
 }
 	
 }

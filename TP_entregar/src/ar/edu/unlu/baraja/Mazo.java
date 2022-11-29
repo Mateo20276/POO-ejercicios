@@ -11,7 +11,7 @@ public class Mazo implements Cloneable {
 		this.mazo = new ArrayList<>();
 	}
 	
-	public void generarMazo() {
+	private void generarMazo() {
 		for (Palo palo: Palo.values()) {
 			for (int j = 1; j < 13; j++) {
 				
@@ -23,7 +23,7 @@ public class Mazo implements Cloneable {
 
 	}
 	
-	public void mezclar() {
+	private void mezclar() {
 		Carta carta= null;
 		for (int i = 0; i < mazo.size(); i++) {
 			int random= (int) (Math.random()*mazo.size());

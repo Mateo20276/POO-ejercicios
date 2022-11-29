@@ -115,8 +115,7 @@ public class Controlador implements Observador {
 	}
 
 	public String verCartas() {
-		return this.modelo.mostrarManoJugador();
-		
+		return this.modelo.mostrarManoJugador();		
 	}
 
 	public void pasarJugador() {		
