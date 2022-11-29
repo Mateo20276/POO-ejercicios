@@ -1,22 +1,21 @@
 package ar.edu.unlu.baraja;
 
-public class Carta{
+public class Carta implements ICarta{
 	private int numero;//comodines (numero y palo = 0)
 	
 	private Palo palo;// (palo 1 = espada), (palo 2 = basto), (palo 3 = oro), (palo 4 = copa).
 
-	private int id;
-	
 	private Palo cambioPalo = null;
-		
-	public Carta(int numero, Palo palo, int id) {
-		super();
-		this.setNumero(numero);
-		this.setPalo(palo);
-		this.setId(id);
-		
-	}
 	
+	private boolean cambioJugador = false;
+	
+
+	
+	@Override
+	public String toString() {
+		return "Carta [numero=" + numero + ", palo=" + palo + "]";
+	}
+
 	public Palo cambiarUnPalo(String p) {
 		Palo palo = null;
 		Palo paloguardar = this.getPalo();
@@ -60,12 +59,12 @@ public class Carta{
 		this.palo = palo;
 	}
 	
-	public int getId() {
-		return id;
+	public boolean getCambioJugador() {
+		return cambioJugador;
 	}
 
-	private void setId(int id) {
-		this.id = id;
+	public void setCambioJugador(boolean cambioJugador) {
+		this.cambioJugador = cambioJugador;
 	}
 	
 	public void setcambioPalo(Palo palo) {
@@ -75,10 +74,12 @@ public class Carta{
 	public Palo getcambioPalo() {
 		return this.cambioPalo;
 	}
-	@Override
-	public String toString() {
-		return "[numero=" + numero + ", palo=" + palo + ", id=" + id + "]" + "\n";
-	}
- 
+	
+	public Carta(int numero, Palo palo) {
+		super();
+		this.setNumero(numero);
+		this.setPalo(palo);
+		
+}
 	
 }

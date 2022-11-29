@@ -2,7 +2,7 @@ package ar.edu.unlu.vista;
 
 import java.util.Scanner;
 
-import ar.edu.unlu.baraja.Carta;
+import ar.edu.unlu.baraja.ICarta;
 import ar.edu.unlu.baraja.Palo;
 import ar.edu.unlu.controlador.*;
 
@@ -17,29 +17,35 @@ public class VistaConsola {
 	}
 	
 	
-	
-	public void menuPrincipal() {				
-		System.out.println("########################");
-		System.out.println("####### JODETE #######");
-		System.out.println("########################");
-		System.out.println();	
-		System.out.println();
+	private void menuPrincipal() {				
 		System.out.println("Selecciona una opción:");
-		System.out.println("a - Mirar cartas");
 	}
   
-	public void menuInicial() {
+	private void menuInicial() {
 		System.out.println("########################");
 		System.out.println("####### JODETE #######");
 		System.out.println("########################");
 		System.out.println();	
 		System.out.println();
 		System.out.println("Escriba la cantidad de jugadores (2 a 6)");
-		
-			
-		
+				
 	}
-		
+	
+/*	private boolean resultado(String cant) {
+		boolean resul = true;
+		try
+		  {
+		    int resultado = Integer.parseInt(cant);
+		    
+		  } 
+		catch(NumberFormatException e) 
+		  {
+			resul = false;
+		  }
+		return resul;
+	}*/
+	
+	
 	public void iniciar() {
 		boolean salir = false;
 		boolean opcionb = true;
@@ -50,17 +56,26 @@ public class VistaConsola {
 		while (!salir) {
 			this.menuInicial();
 			String cant = this.entrada.nextLine();
+/*			while (resultado(cant)) {
+				System.out.println("No ha escrito un numero");
+				System.out.println("");
+
+				this.menuInicial();
+				cant = this.entrada.nextLine();
+			}
+*/
 			if (this.cantidadJugadores(Integer.parseInt(cant))) {
 				salir = true;
-
+				
 			}
-			int cantidad = Integer.parseInt(cant);
-			for (int i = 0; i < cantidad; i++) {
-				System.out.println("");
-				System.out.println("Escriba el nombre del jugador " + (i + 1));
-				String nom = this.entrada.nextLine();
-				this.controlador.cargarNombreJugadores(nom, i);
-
+			if (salir) {
+				int cantidad = Integer.parseInt(cant);
+				for (int i = 0; i < cantidad; i++) {
+					System.out.println("");
+					System.out.println("Escriba el nombre del jugador " + (i + 1));
+					String nom = this.entrada.nextLine();
+					this.controlador.cargarNombreJugadores(nom, i);
+				}
 			}
 		}
 			salir = false;
@@ -83,23 +98,23 @@ public class VistaConsola {
 			String opcion = this.entrada.nextLine();
 			if (opcion.equals("b")) {opciond = true;}
 			switch (opcion.toLowerCase()) {
-				case"a":
-					System.out.println(this.verCartas());
-					System.out.println(this.verCartaMazoAbajo());
-					break;
-					
 				case "b":
 					if(!opcionb){System.out.println("Opción no válida.");break;}
 					System.out.println("Seleccione carta a tirar");
 					String carta = this.entrada.nextLine();
 					opcionb = false;
 					opcionc = false;
-					Carta cartaax = this.tirarCarta(Integer.parseInt(carta));
+					ICarta cartaax = this.tirarCarta(Integer.parseInt(carta));
 					if (cartaax == null) {											
 						opcionb = true;
 						opcionc = true;
 						opciond = false;
 						}
+					else if (cartaax.getNumero() == 7 || cartaax.getNumero()== 11) {
+						opcionb = true;
+						opcionc = false;
+						opciond = true;
+					}
 					else if (cartaax.getNumero() == 10) {
 						opcionb = false;
 						opcionc = false;
@@ -108,10 +123,10 @@ public class VistaConsola {
 						}
 					else if (cartaax.getNumero() == 4) {
 						opcionb = true;
-						opcionc = true;
-						opciond = false;
-						opcionf = false;
-						}
+						opcionc = false;
+						opciond = true;
+
+					}
 					break;
 					
 				case "c":
@@ -122,7 +137,6 @@ public class VistaConsola {
 						opcionc = true;
 						opciond = false;
 					}
-
 					break;
 					
 				case "d":
@@ -164,20 +178,12 @@ public class VistaConsola {
 		return this.controlador.robarCarta();
 	}
 
-
-
-	private String verCartaMazoAbajo() {
-		return this.controlador.verCartaMazoAbajo();
-	}
-
-
-
 	private boolean  cantidadJugadores(int cant) {
 		return this.controlador.cantidadJugadores(cant);
 		
 	}
 
-	private Carta tirarCarta(int indice) {
+	private ICarta tirarCarta(int indice) {
 		return this.controlador.tirarCarta(indice);
 	}
 	
@@ -185,10 +191,7 @@ public class VistaConsola {
 		this.controlador.pasarJugador();
 	}
 	
-	private String verCartas(){
-		return this.controlador.verCartas();
-	}
-	
+
 	private void cambioPalo(String p) {
 		this.controlador.cambiarPalo(p);
 	}
@@ -196,7 +199,18 @@ public class VistaConsola {
 	public void setControlador(Controlador controlador) {
 		this.controlador = controlador;
 	}
+	
 
+	public void verCartaMazoAbajo(String cartas) {
+		System.out.println("");
+		System.out.println(cartas);
+	}
+
+	public void verCartas(String cartas){
+		System.out.println("");
+		System.out.println(cartas);
+	}
+	
 	public void mostrarCartaInexistente() {
 		System.out.println("");
 		System.out.println("Carta Inexistente");
@@ -223,11 +237,12 @@ public class VistaConsola {
 		
 	}
 
-
-
-	public void mostrarCambioJugador(String nombre) {
+	public void mostrarFinTurno() {
 		System.out.println("");
-		System.out.println("Fin de turno");
+		System.out.println("Fin de turno");	
+	}
+
+	public void mostrarCambioJugador(String nombre) {	
 		System.out.println("");
 		System.out.println("Turno del jugador " + nombre);
 
@@ -240,53 +255,76 @@ public class VistaConsola {
 		System.out.println("Mazo vacio, no se pudieron robar cartas");
 	}
 
-
-
 	public void mostrarCambioRonda() {
+		System.out.println("");
+		System.out.println("El jugador se ha quedado sin cartas");
+		System.out.println("");
 		System.out.println("Una nueva ronda ha comenzado");
 	}
 
-
-
 	public void mostrarCartaTiradaCorrectamente() {
+		System.out.println("");
 		System.out.println("Carta tirada correctamente");		
 	}
 
 	public void mostrarCartaNormal() {
+		System.out.println("");
 		System.out.println("Carta normal tirada");
 	}
 	
 	public void mostrarCartaEspecial4() {
+		System.out.println("");
 		System.out.println("Carta especial 4 tirada");
+		System.out.println("");
+		System.out.println("El siguiente jugador pierde su turno");
+		
+		
+	}
+	public void mostrarCartaEspecial7() {
+		System.out.println("");
+		System.out.println("Carta especial 7 tirada");
+		System.out.println("");
+		System.out.println("Puedes tirar otra carta");
 		
 	}
 	
 	public void mostrarCartaEspecial10() {
+		System.out.println("");
 		System.out.println("Carta especial 10 tirada");
+		System.out.println("");
+		System.out.println("Puedes tirar otra carta");
 		
 	}
 
 
 	public void mostrarCaraEspecial11() {
+		System.out.println("");
 		System.out.println("Carta especial 11 tirada");
+		System.out.println("");
+		System.out.println("Cambio de palo");
 	}
 
 	public void mostrarCaraEspecial12() {
+		System.out.println("");
 		System.out.println("Carta especial 12 tirada");
+		System.out.println("");
+		System.out.println("Cambio de sentido la ronda");
 	}
 
 
 
 	public void mostrarCambioColor(Palo palo) {
+		System.out.println("");
 		System.out.println("El palo a sido cambiado a: " + palo);
 		
 	}
 
 
-
-
-
-
+	public void mostrarCantidadJugadoresErronea() {
+		System.out.println("");
+		System.out.println("Cantidad de jugadores erronea");
+		
+	}
 
 	
 }

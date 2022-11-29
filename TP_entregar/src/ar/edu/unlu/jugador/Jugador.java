@@ -15,10 +15,9 @@ public class Jugador {
 	private boolean jodete = false;
 		
 	
-	public Jugador( ArrayList<Carta> mano) {
+	public Jugador() {
 		super();
 		this.mano = new ArrayList<>();
-		setMano(mano);
 	}
 
 
@@ -51,10 +50,16 @@ public class Jugador {
 		}
 		return resultado;
 	}
-	public void limpiarMazoJugador() {
+	public void limpiarManoJugador() {
 		this.mano.clear();
 	}
 	
+	@Override
+	public String toString() {
+		return "Jugador [mano=" + mano + "]";
+	}
+
+
 	public void sumarCarta(Carta carta) {
 		this.mano.add(carta);
 	
@@ -85,11 +90,9 @@ public class Jugador {
 		this.puntos = puntos;
 	}
 
-
 	public String getNombre() {
 		return nombre;
 	}
-
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
@@ -98,8 +101,7 @@ public class Jugador {
 	public void setJodete(boolean jodete) {
 		this.jodete = jodete;
 	}
-
-
+	
 	public boolean getJodete() {
 		return this.jodete;
 	}

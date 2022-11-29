@@ -12,31 +12,17 @@ public class Mazo implements Cloneable {
 	}
 	
 	public void generarMazo() {
-		int c = 1;
 		for (Palo palo: Palo.values()) {
 			for (int j = 1; j < 13; j++) {
 				
-				this.agregarCarta(new Carta(j,palo,c++));				
+				this.agregarCarta(new Carta(j,palo));				
 			}
 		}
-		this.agregarCarta(new Carta(0,null,49));
-		this.agregarCarta(new Carta(0,null,50));
+		this.agregarCarta(new Carta(0,null));
+		this.agregarCarta(new Carta(0,null));
 
 	}
 	
-	public void cargarMazo() {
-		this.generarMazo();
-		this.mezclar();
-	}
-	
-	public ArrayList<Carta> getMazo() {
-		return mazo;
-	}
-
-	public void setMazo(ArrayList<Carta> mazo) {
-		this.mazo = mazo;
-	}
-
 	public void mezclar() {
 		Carta carta= null;
 		for (int i = 0; i < mazo.size(); i++) {
@@ -47,8 +33,54 @@ public class Mazo implements Cloneable {
 			
 		}
 	}
+	public int tamanioMazo(){
+		int tamanio = this.getMazo().size();
+		
+		return tamanio;
+		
+	}
+	public void cargarMazo() {
+		this.generarMazo();
+		this.mezclar();
+	}
 	
+	public Carta obtenerCarta(int i) {
+		Carta carta = this.getMazo().get(i);
+		return carta;
+	}
 	
+
+	public void pasarCartasDeUnMazo(Mazo mazo) {
+		Carta carta = null;
+		for (int i = 0; i < mazo.getMazo().size() - 1; i++) {
+			this.agregarCarta(mazo.getMazo().get(i));		
+		}
+		this.mezclar();
+		carta = mazo.getMazo().get(mazo.getMazo().size());
+		mazo.limpiarMazo();		
+		mazo.agregarCarta(carta);
+	}
+	
+	@Override
+	public String toString() {
+		return "Mazo [mazo=" + mazo + "]";
+	}
+
+	public boolean tamanioIgualCero() {
+		boolean resultado = false;
+		if (this.tamanioMazo() == 0){resultado = true;}
+				
+		return resultado;
+	}
+	
+	public Carta obtenerUltimaCarta() {
+		return (this.obtenerCarta(this.getMazo().size()-1));
+	}
+
+	public ArrayList<Carta> getMazo() {
+		return mazo;
+	}
+
 	public void agregarCarta(Carta carta) {
 		this.mazo.add(carta);
 	}
@@ -63,28 +95,6 @@ public class Mazo implements Cloneable {
 			this.mazo.clear();		
 		}
 		
-	}
-
-	public void pasarCartasDeUnMazo(Mazo mazo) {
-		Carta carta = null;
-		for (int i = 0; i < mazo.getMazo().size() - 1; i++) {
-			this.agregarCarta(mazo.getMazo().get(i));		
-		}
-		this.mezclar();
-		carta = mazo.getMazo().get(mazo.getMazo().size());
-		mazo.limpiarMazo();		
-		mazo.agregarCarta(carta);
-	}
-	
-	public boolean tamanioIgualCero() {
-		boolean resultado = false;
-		if (this.getMazo().size() == 0){resultado = true;}
-				
-		return resultado;
-	}
-			
-	public Carta obtenerUltimaCarta() {
-		return (this.getMazo().get(this.getMazo().size()-1));
 	}
 
 }

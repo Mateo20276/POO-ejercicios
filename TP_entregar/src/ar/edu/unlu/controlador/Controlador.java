@@ -1,9 +1,8 @@
 package ar.edu.unlu.controlador;
 
-import ar.edu.unlu.baraja.Carta;
+import ar.edu.unlu.baraja.ICarta;
 import ar.edu.unlu.baraja.Palo;
 import ar.edu.unlu.juego.*;
-import ar.edu.unlu.jugador.*;
 import ar.edu.unlu.observer.*;
 import ar.edu.unlu.vista.VistaConsola;
 
@@ -21,15 +20,25 @@ public class Controlador implements Observador {
 		this.modelo.agregadorObservador(this);
 
 	}
-	
 			
 	@Override
 	public void actualizar(Object evento, Observable observado) {
 
 		if(evento instanceof Eventos) {
 			switch((Eventos) evento) {
+			case CARTAS:
+				String cartas = this.modelo.mostrarManoJugador();
+				this.vista.verCartas(cartas);
+				cartas = this.modelo.mostrarCartaMazoAbajo();
+				this.vista.verCartaMazoAbajo(cartas);
+				break;
 			case CARTA_INEXISTENTE:
 				this.vista.mostrarCartaInexistente();
+				break;
+			
+			case JUGADOR_INICIAL:
+				String nombre = this.modelo.getNombreJugadorActual();
+				this.vista.mostrarCambioJugador(nombre);			
 				break;
 				
 			case CARTA_NO_COINCIDENTE:
@@ -46,8 +55,9 @@ public class Controlador implements Observador {
 				break;
 			
 			case CAMBIAR_JUGADOR:
-				String nombre = this.modelo.getNombreJugadorActual();
-				this.vista.mostrarCambioJugador(nombre);			
+				String nombre1 = this.modelo.getNombreJugadorActual();
+				this.vista.mostrarFinTurno();
+				this.vista.mostrarCambioJugador(nombre1);			
 				break;
 			
 			case NO_ES_POSIBLE_ROBAR_CARTAS:
@@ -71,6 +81,10 @@ public class Controlador implements Observador {
 				this.vista.mostrarCartaEspecial4();
 				break;
 				
+			case CARTA_ESPECIAL_7:
+				this.vista.mostrarCartaEspecial7();
+				break;
+				
 			case CARTA_ESPECIAL_10:
 				this.vista.mostrarCartaEspecial10();
 				break;
@@ -86,6 +100,15 @@ public class Controlador implements Observador {
 				Palo palo = this.modelo.getMazoAbajo().obtenerUltimaCarta().getPalo();
 				this.vista.mostrarCambioColor(palo);
 				break;
+				
+			case CANTIDAD_JUGADORES_ERRONEA:
+				this.vista.mostrarCantidadJugadoresErronea();
+			case CARTA_ESPECIAL_2:
+				break;
+			case CARTA_ESPECIAL_COMODIN:
+				break;
+			default:
+				break;
 
 			}
 		}
@@ -96,8 +119,7 @@ public class Controlador implements Observador {
 		
 	}
 
-	public void pasarJugador() {
-		
+	public void pasarJugador() {		
 		if (this.modelo.terminaRonda()) {
 			this.modelo.cambioJugadorInicial();
 		}
@@ -114,7 +136,7 @@ public class Controlador implements Observador {
 	}
 	
 	public boolean robarCarta(){
-		return this.modelo.robarCarta();
+		return this.modelo.robarCarta(true);
 	}
 
 	public void cargarNombreJugadores(String nombre, int i) {
@@ -126,7 +148,7 @@ public class Controlador implements Observador {
 		
 	}
 		
-	public Carta  tirarCarta(int indice) {
+	public ICarta  tirarCarta(int indice) {
 		return  this.modelo.tirarCarta(indice);
 	}
 	
