@@ -122,7 +122,7 @@ public class Controlador implements Observador {
 		if (this.modelo.terminaRonda()) {
 			this.modelo.cambioJugadorInicial();
 		}
-		else{this.modelo.cambiojugadorActual(true);}		
+		else{this.modelo.cambiojugadorActual(true);} //TODO		
 	}
 
 	public boolean cantidadJugadores(int cant) {

@@ -167,8 +167,6 @@ public class VistaConsola {
 		}	
 	}
 	
-	
-
 	private void cantarJodete() {
 		this.controlador.cantarJodete();
 		

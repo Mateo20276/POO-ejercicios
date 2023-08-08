@@ -11,9 +11,6 @@ public class Prueba {
 		VistaConsola vista = new VistaConsola();
 		Controlador controlador = new Controlador(modelo, vista);
 		
-		vista.iniciar();		
-		
-		
+		vista.iniciar();				
 	}
-
 }

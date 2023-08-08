@@ -100,19 +100,19 @@ public class Juego implements Observable {
 		boolean resultado = false;
 		
 		if(this.mazoAbajo.tamanioIgualCero()) {
-			resultado = true;
+			resultado = this.mazoAbajo.tamanioIgualCero();
 		}
 		
 		else if (carta.getCambioJugador()) {
 			if(carta.getNumero() == 4) {
-				resultado = true;
+				resultado = true;// TODO refactorizar
 			}
 		}
 
 		else if ((this.mazoAbajo.obtenerUltimaCarta().getNumero() == carta.getNumero()) || (this.mazoAbajo.obtenerUltimaCarta()).getPalo() == carta.getPalo()) {
 			if (!(carta.getcambioPalo() == null)){carta.setPalo(carta.getcambioPalo());carta.setcambioPalo(null);
 				}
-			resultado = true;
+			resultado = true;// TODO refactorizar
 		}
 				
 		return resultado;		
@@ -122,7 +122,8 @@ public class Juego implements Observable {
 		Carta cartaAuxiliar = null;
 		short opcion = '1';
 		String opcionespecial = "0";
-		if ((indice > 0)&&(indice < this.jugadores.get(this.getJugadorActual()).getCantidadCartas() + 1)) {
+		boolean esCartavalida = (indice > 0)&&(indice < this.jugadores.get(this.getJugadorActual()).getCantidadCartas() + 1);
+		if (esCartavalida) {// TODO al jugador
 			opcion = '2';
 			cartaAuxiliar = this.jugadores.get(this.getJugadorActual()).obtenerCarta(indice - 1);
 			if (this.cartaArribaMazoAbajo(cartaAuxiliar)){
