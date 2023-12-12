@@ -67,10 +67,8 @@ public class Mazo implements Cloneable {
 	}
 
 	public boolean tamanioIgualCero() {
-		boolean resultado = false;
-		if (this.tamanioMazo() == 0){resultado = true;}
-				
-		return resultado;
+		return (this.tamanioMazo() == 0);
+
 	}
 	
 	public Carta obtenerUltimaCarta() {

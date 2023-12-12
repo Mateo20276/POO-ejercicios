@@ -52,6 +52,11 @@ public class Jugador {
 		return resultado;*/
 		return (this.getCantidadCartas() == 0);
 	}
+	
+	public boolean esCartaValida(int indice) {		
+		return ((indice > 0)&&(indice < (this.getCantidadCartas() + 1)));
+	};
+	
 	public void limpiarManoJugador() {
 		this.mano.clear();
 	}

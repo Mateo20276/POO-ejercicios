@@ -9,12 +9,18 @@ public class Carta implements ICarta{
 	
 	private boolean cambioJugador = false;
 	
+	public Carta(int numero, Palo palo) {
+		super();
+		this.setNumero(numero);
+		this.setPalo(palo);		
+}
 
 	
 	@Override
 	public String toString() {
 		return "Carta [numero=" + numero + ", palo=" + palo + "]";
 	}
+	
 
 	public Palo cambiarUnPalo(String p) {
 		Palo palo = null;
@@ -75,10 +81,6 @@ public class Carta implements ICarta{
 		return this.cambioPalo;
 	}
 	
-	public Carta(int numero, Palo palo) {
-		super();
-		this.setNumero(numero);
-		this.setPalo(palo);		
-}
+	
 	
 }

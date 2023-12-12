@@ -120,67 +120,24 @@ public class Juego implements Observable {
 	
 	public ICarta tirarCarta(int indice) {
 		Carta cartaAuxiliar = null;
-		short opcion = '1';
-		String opcionespecial = "0";
-		boolean esCartavalida = (indice > 0)&&(indice < this.jugadores.get(this.getJugadorActual()).getCantidadCartas() + 1);
-		if (esCartavalida) {// TODO al jugador
-			opcion = '2';
-			cartaAuxiliar = this.jugadores.get(this.getJugadorActual()).obtenerCarta(indice - 1);
-			if (this.cartaArribaMazoAbajo(cartaAuxiliar)){
-				this.jugadores.get(this.getJugadorActual()).tirarCarta(indice - 1);
-				this.mazoAbajo.agregarCarta(cartaAuxiliar);
-				opcion = '3';
-			if (cartaAuxiliar.getNumero() == 12) {
-				if (!(this.getNumeroJugadores() == 2)) {
-					if (this.getSentidoJuego() == 1) {
-						this.setSentidoJuego(-1);
-						}
-					else {this.setSentidoJuego(1);}
-				}
-				else {cartaAuxiliar.setCambioJugador(true);}
-				opcionespecial = "12";
-
-				}
-			else if (cartaAuxiliar.getNumero() == 11) {
-				opcionespecial = "11";
-				
-				}
-			else if (cartaAuxiliar.getNumero() == 10) {
-				opcionespecial = "10";
-				}
-			else if (cartaAuxiliar.getNumero() == 7) {
-				opcionespecial = "7";
-				}
-			else if (cartaAuxiliar.getNumero() == 4) {//Logica???????
-				cartaAuxiliar.setCambioJugador(true);
-				opcionespecial = "4";			
-				}
-			}						
-		}
-
-		if (opcion == '1'){
+		
+		if (! this.getJugadorRequerido().esCartaValida(indice)) {
 			this.notificar(Eventos.CARTA_INEXISTENTE);
-			}
-		else if (opcion == '2'){
-			this.notificar(Eventos.CARTA_NO_COINCIDENTE);
-			cartaAuxiliar = null;								
 		}
-		else if (opcion == '3') {
-			this.notificar(Eventos.CARTA_TIRADA_CORRECTAMENTE);
-			
-			if (opcionespecial == "0") {this.notificar(Eventos.CARTA_TIRADA_NORMAL);}
-			
-			else if (opcionespecial == "4") {this.notificar(Eventos.CARTA_ESPECIAL_4);}
-			
-			else if (opcionespecial == "7") {this.notificar(Eventos.CARTA_ESPECIAL_7);}
-			
-			else if (opcionespecial == "10") {this.notificar(Eventos.CARTA_ESPECIAL_10);}
-			
-			else if (opcionespecial == "11") {this.notificar(Eventos.CARTA_ESPECIAL_11);}
-			
-			else if (opcionespecial == "12") {this.notificar(Eventos.CARTA_ESPECIAL_12);}
-			
-		}	
+		else {
+			cartaAuxiliar = obtenerCartaIndice(indice);
+			if(! this.cartaArribaMazoAbajo(cartaAuxiliar)) {
+				cartaAuxiliar = null;
+				this.notificar(Eventos.CARTA_NO_COINCIDENTE);
+			}
+			else {
+				this.getJugadorRequerido().tirarCarta(indice - 1);
+				this.mazoAbajo.agregarCarta(cartaAuxiliar);
+				CartaFuncion.funcionamientoCartas(cartaAuxiliar.getNumero(), this, cartaAuxiliar);
+				
+			}
+		}
+		
 		
 		this.notificar(Eventos.CARTAS);
 		
@@ -189,11 +146,11 @@ public class Juego implements Observable {
 	
 	public boolean terminaRonda() {
 		boolean resultado = false;
-		if (!(this.jugadores.get(this.getJugadorActual()).getJodete()) && (this.jugadores.get(this.getJugadorActual()).jodete())) {
+		if (!(this.getJugadorRequerido().getJodete()) && (this.getJugadorRequerido().jodete())) {
 			this.cantarJodete(); 
 			}
 		
-		if (this.jugadores.get(this.getJugadorActual()).cantidadCartasCero()) {
+		if (this.getJugadorRequerido().cantidadCartasCero()) {
 			resultado = true;			
 		}
 		return resultado;
@@ -223,7 +180,7 @@ public class Juego implements Observable {
 	public void cambiojugadorActual(boolean cambio) {
 		int jugadorAct;
 		jugadorAct = this.getJugadorActual() + this.getSentidoJuego();
-		this.jugadores.get(this.getJugadorActual()).setJodete(false);
+		this.getJugadorRequerido().setJodete(false);
 		if (jugadorAct == -1) {setJugadorActual(this.getNumeroJugadores() - 1);}
 		else if (jugadorAct < this.getNumeroJugadores()) {setJugadorActual(jugadorAct);}
 		else {setJugadorActual(0);}
@@ -285,7 +242,7 @@ public class Juego implements Observable {
 		}			
 		
 		if (resultado){
-			this.jugadores.get(this.getJugadorActual()).sumarCarta(this.mazoArriba.getMazo().get(0));
+			this.getJugadorRequerido().sumarCarta(this.mazoArriba.getMazo().get(0));
 			this.mazoArriba.eliminarCarta(0);	
 		}
 		
@@ -325,6 +282,10 @@ public class Juego implements Observable {
 	public Mazo getMazoAbajo() {
 		return mazoAbajo;
 	}
+	
+	private Carta obtenerCartaIndice(int indice) {
+		return this.getJugadorRequerido().obtenerCarta(indice - 1);
+	}
 		
 	public int getJugadorInicial() {
 		return jugadorInicial;
@@ -337,7 +298,11 @@ public class Juego implements Observable {
 	private int getJugadorActual() {
 		return jugadorActual;
 	}
-
+	
+	private Jugador getJugadorRequerido() {
+		return this.jugadores.get(this.getJugadorActual());
+	};
+	
 	private void setJugadorActual(int jugadorActual) {
 		this.jugadorActual = jugadorActual;
 	}
@@ -362,7 +327,7 @@ public class Juego implements Observable {
 		return sentidoJuego;
 	}
 
-	private void setSentidoJuego(int sentidoJuego) {
+	public void setSentidoJuego(int sentidoJuego) {
 		this.sentidoJuego = sentidoJuego;
 	}
 	
