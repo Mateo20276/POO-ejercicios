@@ -264,6 +264,14 @@ public class Juego implements Observable {
 		return (carta);
 	}
 	
+	public void pasarJugador() {
+	if (this.terminaRonda()) {
+		this.cambioJugadorInicial();
+	}
+	else{this.cambiojugadorActual(true);}		
+	}
+	
+	
 	public boolean  robarCarta(boolean mostrar) {
 		boolean resultado = true;
 	

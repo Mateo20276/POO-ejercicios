@@ -35,20 +35,22 @@ public class Jugador {
 	}
 	
 	public boolean jodete() {
-		boolean resultado = false;
+/*		boolean resultado = this.mano.size() == 1;
 		if (this.mano.size() == 1) {
 			resultado = true;
 		}
 		
-		return resultado;		
+		return resultado;		*/
+		return (this.mano.size() == 1);
 	}
 	
 	public boolean cantidadCartasCero() {
-		boolean resultado = false;
+		/*boolean resultado = false;
 		if (this.getCantidadCartas() == 0) {
 			resultado = true;			
 		}
-		return resultado;
+		return resultado;*/
+		return (this.getCantidadCartas() == 0);
 	}
 	public void limpiarManoJugador() {
 		this.mano.clear();
