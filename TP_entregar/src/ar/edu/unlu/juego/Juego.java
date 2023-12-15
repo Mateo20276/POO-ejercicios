@@ -43,7 +43,7 @@ public class Juego implements Observable {
 		
 	}
 
-	private ArrayList<Mazo> repartirCartaJugador() { 
+	private ArrayList<Mazo> repartirCartaJugador() {  //reparte las cartas del mazo
 		ArrayList<Mazo> mazoJugadores = new ArrayList<>();
 		int cont = 0;
 
@@ -67,20 +67,20 @@ public class Juego implements Observable {
 		return mazoJugadores;
 	}
 
-	private void cargarJugadores() {
+	private void cargarJugadores() { //crea los jugadores y reparte las cartas
 		ArrayList<Mazo> mazoJugadores = repartirCartaJugador();
 		this.crearJugadores();
 		for (int i = 0; i < this.getNumeroJugadores(); i++) {
 			jugadores.get(i).setMano(mazoJugadores.get(i).getMazo());
 		}		
 	}
-	private void crearJugadores() {
+	private void crearJugadores() {// crea los jugadores
 		for (int i = 0; i < this.getNumeroJugadores(); i++) {
 			jugadores.add(new Jugador());
 		}		
 	}
 	
-	public boolean cantidadJugadores(int cant) {
+	public boolean cantidadJugadores(int cant) {// verifica si la cantidad de jugadores es correcta
 		boolean veri = true;
 		if ((cant >= numeroMinimoJugadores) && (cant <= numeroMaximoJugadores)) {
 			this.setNumeroJugadores(cant);
@@ -96,32 +96,33 @@ public class Juego implements Observable {
 	
 
 
-	private boolean cartaArribaMazoAbajo(Carta carta) {
-		boolean resultado = false;
-		
+	private boolean cartaArribaMazoAbajo(Carta carta) {//verifica la carta boca arriba del mazo antes de tirar una carta
+		boolean resultado = false;	
+
 		if(this.mazoAbajo.tamanioIgualCero()) {
 			resultado = this.mazoAbajo.tamanioIgualCero();
 		}
 		
-		else if (carta.getCambioJugador()) {
-			if(carta.getNumero() == 4) {
-				resultado = true;// TODO refactorizar
-			}
-		}
-
-		else if ((this.mazoAbajo.obtenerUltimaCarta().getNumero() == carta.getNumero()) || (this.mazoAbajo.obtenerUltimaCarta()).getPalo() == carta.getPalo()) {
-			if (!(carta.getcambioPalo() == null)){carta.setPalo(carta.getcambioPalo());carta.setcambioPalo(null);
+		else if ((this.mazoAbajo.obtenerUltimaCarta().getNumero() == carta.getNumero()) || (this.mazoAbajo.obtenerUltimaCarta().getPalo() == carta.getPalo())) {
+			if (!(carta.getcambioPalo() == null)){// verifica la carta especial 10
+				carta.setPalo(carta.getcambioPalo());carta.setcambioPalo(null);
 				}
-			resultado = true;// TODO refactorizar
+			resultado = true;
+			if (!(this.mazoAbajo.obtenerUltimaCarta().getNumero() == carta.getNumero())&&(this.getCartaEspecial2()) != 0) { //verifica carta especial 2
+				resultado = false;
+			}			
+			else if (this.mazoAbajo.obtenerUltimaCarta().getNumero() == carta.getNumero()&&(this.getCartaEspecial2()) != 0){
+				this.mazoAbajo.obtenerUltimaCarta().sumLevantar2Cartas();				
+			}
 		}
 				
 		return resultado;		
 	}
 	
-	public ICarta tirarCarta(int indice) {
+	public ICarta tirarCarta(int indice) { // tira la carta seleccionada
 		Carta cartaAuxiliar = null;
 		
-		if (! this.getJugadorRequerido().esCartaValida(indice)) {
+		if (! this.getJugadorRequerido().esCartaValida(indice)) { // verifica si el indice de la carta se encuatra en el rango del tamano de la mano del jugador
 			this.notificar(Eventos.CARTA_INEXISTENTE);
 		}
 		else {
@@ -133,18 +134,16 @@ public class Juego implements Observable {
 			else {
 				this.getJugadorRequerido().tirarCarta(indice - 1);
 				this.mazoAbajo.agregarCarta(cartaAuxiliar);
-				CartaFuncion.funcionamientoCartas(cartaAuxiliar.getNumero(), this, cartaAuxiliar);
-				
+				CartaFuncion.funcionamientoCartas(cartaAuxiliar.getNumero(), this, cartaAuxiliar);				
 			}
-		}
-		
+		}		
 		
 		this.notificar(Eventos.CARTAS);
 		
 		return cartaAuxiliar;
 	}
 	
-	public boolean terminaRonda() {
+	public boolean terminaRonda() { //termina la ronda
 		boolean resultado = false;
 		if (!(this.getJugadorRequerido().getJodete()) && (this.getJugadorRequerido().jodete())) {
 			this.cantarJodete(); 
@@ -156,7 +155,7 @@ public class Juego implements Observable {
 		return resultado;
 	}
 	
-	public void cambioJugadorInicial() {
+	public void cambioJugadorInicial() {// cambia el jugador que comienza
 		int jugadorIni;
 		jugadorIni = this.jugadorInicial + 1;
 		if (jugadorIni < this.getNumeroJugadores()) {setJugadorInicial(jugadorIni);}
@@ -177,7 +176,7 @@ public class Juego implements Observable {
 		
 	}
 	
-	public void cambiojugadorActual(boolean cambio) {
+	public void cambiojugadorActual(boolean cambio) { // cambia al jugador que sigue
 		int jugadorAct;
 		jugadorAct = this.getJugadorActual() + this.getSentidoJuego();
 		this.getJugadorRequerido().setJodete(false);
@@ -185,23 +184,20 @@ public class Juego implements Observable {
 		else if (jugadorAct < this.getNumeroJugadores()) {setJugadorActual(jugadorAct);}
 		else {setJugadorActual(0);}
 		if (!this.mazoAbajo.tamanioIgualCero()) {
-//			if (this.mazoAbajo.obtenerUltimaCarta().getCambioJugador()) {this.mazoAbajo.obtenerUltimaCarta().setCambioJugador(false);this.cambiojugadorActual(false);}
-			for (int i = 0; i <this.mazoAbajo.tamanioMazo(); i++) {
-				if (this.mazoAbajo.obtenerCarta(i).getCambioJugador()) {
-					this.mazoAbajo.obtenerCarta(i).setCambioJugador(false);
-					this.cambiojugadorActual(false);
-				}
+			if (this.mazoAbajo.obtenerUltimaCarta().getCambioJugador()) {
+				this.mazoAbajo.obtenerUltimaCarta().setCambioJugador(false);
+				this.cambiojugadorActual(false);
 			}
 		}
 		if (cambio) {this.notificar(Eventos.CAMBIAR_JUGADOR);this.notificar(Eventos.CARTAS);}		
 	}
 
-	public void cartaComodin10(String p) {
-		this.mazoAbajo.obtenerUltimaCarta().setcambioPalo(this.mazoAbajo.obtenerUltimaCarta().cambiarUnPalo(p)); 
+	public void cartaComodin10(String p) { // logica de la carta numero 10
+		this.mazoAbajo.obtenerUltimaCarta().setcambioPalo(this.mazoAbajo.obtenerUltimaCarta().cambiarUnPalo(p)); //modificar???????????
 		this.notificar(Eventos.CAMBIO_COLOR);		
 	}
 
-	public String mostrarManoJugador() {
+	public String mostrarManoJugador() {// muestra las cartas del jugador
 		String cadena = "";
 		int i = 1;
 		
@@ -235,15 +231,22 @@ public class Juego implements Observable {
 		if(this.mazoArriba.tamanioIgualCero()) {
 			if (!this.mazoAbajo.tamanioIgualCero()) {
 				this.mazoArriba.pasarCartasDeUnMazo(mazoAbajo);
+				
 			}
-			else {resultado = false;
-				  this.notificar(Eventos.NO_ES_POSIBLE_ROBAR_CARTAS);
+			else {
+				resultado = false;
+				this.notificar(Eventos.NO_ES_POSIBLE_ROBAR_CARTAS);
 			}	
 		}			
 		
-		if (resultado){
+		if (resultado){						
 			this.getJugadorRequerido().sumarCarta(this.mazoArriba.getMazo().get(0));
 			this.mazoArriba.eliminarCarta(0);	
+
+			if((!this.mazoAbajo.tamanioIgualCero())&& !(this.getCartaEspecial2() == 0)) {
+				this.mazoAbajo.obtenerUltimaCarta().restLevantar2Cartas();
+				this.robarCarta(false);
+			}
 		}
 		
 		if (mostrar) {this.notificar(Eventos.CARTAS);}
@@ -259,7 +262,7 @@ public class Juego implements Observable {
 			}	
 	}
 	
-	public void cantarJodete() {
+	public void cantarJodete() {  //MODIFICAR?????????
 		for (int i = 0; i < 5; i++) {
 			if (!this.robarCarta(false)) {
 				break;													
@@ -333,6 +336,17 @@ public class Juego implements Observable {
 	
 	public int getNumeroJugadores() {
 		return numeroJugadores;
+	}
+	
+	public int getCartaEspecial2() {
+		Carta carta = this.mazoAbajo.obtenerUltimaCarta();
+		if(carta == null) {
+			return 0;
+		}
+		else{
+			return carta.getLevantar2Cartas();
+		}
+
 	}
 
 }

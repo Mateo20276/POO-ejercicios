@@ -7,7 +7,9 @@ public class Carta implements ICarta{
 
 	private Palo cambioPalo = null;
 	
-	private boolean cambioJugador = false;
+	private boolean cambioJugador = false; //Cuando se tira un 4. Cuando se tira un 12 con 2 jugadore
+	
+	private int levantar2Cartas = 0;//Cuando se tira un 2
 	
 	public Carta(int numero, Palo palo) {
 		super();
@@ -71,6 +73,22 @@ public class Carta implements ICarta{
 
 	public void setCambioJugador(boolean cambioJugador) {
 		this.cambioJugador = cambioJugador;
+	}
+	
+	public int getLevantar2Cartas() {
+		return levantar2Cartas;
+	}
+
+	public void sumLevantar2Cartas() {
+		if (this.getLevantar2Cartas() == 0) {
+			this.levantar2Cartas = levantar2Cartas + 1;
+		}
+		else {this.levantar2Cartas = levantar2Cartas + 2;};
+		
+	}
+	
+	public void restLevantar2Cartas() {
+		this.levantar2Cartas = levantar2Cartas - 1;
 	}
 	
 	public void setcambioPalo(Palo palo) {

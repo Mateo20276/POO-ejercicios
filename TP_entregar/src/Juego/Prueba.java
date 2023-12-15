@@ -8,9 +8,9 @@ public class Prueba {
 
 	public static void main(String[] args) {
 		Juego modelo = new Juego();
-		VistaConsola vista = new VistaConsola();
+		IVista vista = new VistaConsolaSwing();
 		Controlador controlador = new Controlador(modelo, vista);
 		
-		vista.iniciar();				
+		//vista.iniciar();				
 	}
 }

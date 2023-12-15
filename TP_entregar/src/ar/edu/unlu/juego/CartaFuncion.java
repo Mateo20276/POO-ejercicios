@@ -7,6 +7,7 @@ public class CartaFuncion {
 	static public void funcionamientoCartas(int numero, Juego juego, Carta carta) {
 		switch(numero) {
 			case 2:
+				carta.sumLevantar2Cartas();	
 				juego.notificar(Eventos.CARTA_ESPECIAL_2);
 				break;
 				
@@ -28,7 +29,7 @@ public class CartaFuncion {
 				break;
 				
 			case 12:
-				if (!(numero == 2)) {					
+				if (!(juego.getNumeroJugadores() == 2)) {					
 					juego.setSentidoJuego(juego.getSentidoJuego()*(-1));
 				}
 				else {carta.setCambioJugador(true);}

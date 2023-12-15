@@ -4,16 +4,17 @@ import ar.edu.unlu.baraja.ICarta;
 import ar.edu.unlu.baraja.Palo;
 import ar.edu.unlu.juego.*;
 import ar.edu.unlu.observer.*;
+import ar.edu.unlu.vista.IVista;
 import ar.edu.unlu.vista.VistaConsola;
 
 
 public class Controlador implements Observador {
 	
-	private VistaConsola vista;
+	private IVista vista;
 
 	private Juego modelo;
 	
-	public Controlador(Juego juego, VistaConsola vista){
+	public Controlador(Juego juego, IVista vista){
 		this.modelo = juego;
 		this.vista = vista;
 		this.vista.setControlador(this);
@@ -126,6 +127,10 @@ public class Controlador implements Observador {
 		return this.modelo.cantidadJugadores(cant);
 		
 	}
+	
+	public int getCartaEspecial2() {
+		return this.modelo.getCartaEspecial2();
+	}
 
 	public String verCartaMazoAbajo() {
 		return this.modelo.mostrarCartaMazoAbajo();
@@ -151,6 +156,7 @@ public class Controlador implements Observador {
 	public void cambiarPalo(String p) {
 		this.modelo.cartaComodin10(p);
 	}
+
 }
 	
 	

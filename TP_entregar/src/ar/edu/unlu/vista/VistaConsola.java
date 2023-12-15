@@ -6,7 +6,7 @@ import ar.edu.unlu.baraja.ICarta;
 import ar.edu.unlu.baraja.Palo;
 import ar.edu.unlu.controlador.*;
 
-public class VistaConsola {
+public class VistaConsola implements IVista {
 
 	private Scanner entrada;
 	
@@ -17,11 +17,11 @@ public class VistaConsola {
 	}
 	
 	
-	private void menuPrincipal() {				
+	public void menuPrincipal() {				
 		System.out.println("Selecciona una opción:");
 	}
   
-	private void menuInicial() {
+	public void menuInicial() {
 		System.out.println("########################");
 		System.out.println("####### JODETE #######");
 		System.out.println("########################");
@@ -30,20 +30,6 @@ public class VistaConsola {
 		System.out.println("Escriba la cantidad de jugadores (2 a 6)");
 				
 	}
-	
-/*	private boolean resultado(String cant) {
-		boolean resul = true;
-		try
-		  {
-		    int resultado = Integer.parseInt(cant);
-		    
-		  } 
-		catch(NumberFormatException e) 
-		  {
-			resul = false;
-		  }
-		return resul;
-	}*/
 	
 	
 	public void iniciar() {
@@ -55,22 +41,13 @@ public class VistaConsola {
 
 		while (!salir) {
 			this.menuInicial();
-			String cant = this.entrada.nextLine();
-/*			while (resultado(cant)) {
-				System.out.println("No ha escrito un numero");
-				System.out.println("");
-
-				this.menuInicial();
-				cant = this.entrada.nextLine();
-			}
-*/
-			if (this.cantidadJugadores(Integer.parseInt(cant))) {
+			int cant = Integer.parseInt(this.entrada.nextLine());
+			if (this.cantidadJugadores(cant)) {
 				salir = true;
 				
 			}
 			if (salir) {
-				int cantidad = Integer.parseInt(cant);
-				for (int i = 0; i < cantidad; i++) {
+				for (int i = 0; i < cant; i++) {
 					System.out.println("");
 					System.out.println("Escriba el nombre del jugador " + (i + 1));
 					String nom = this.entrada.nextLine();
@@ -121,18 +98,15 @@ public class VistaConsola {
 						opciond = false;
 						opcionf = true;
 						}
-					else if (cartaax.getNumero() == 4) {
-						opcionb = true;
-						opcionc = false;
-						opciond = true;
-
-					}
 					break;
 					
 				case "c":
-					if(!opcionc){System.out.println("Opción no válida.");break;}
+					if(!opcionc){System.out.println("Opción no válida.");break;}					
 					opcionc = false;
 					opciond = true;
+					if (this.getCartaEspecial2() !=0) {
+						opcionb=false;
+					}
 					if(!this.robarCarta()) {
 						opcionc = true;
 						opciond = false;
@@ -167,30 +141,29 @@ public class VistaConsola {
 		}	
 	}
 	
-	private void cantarJodete() {
+	public void cantarJodete() {
 		this.controlador.cantarJodete();
 		
 	}
 
-	private boolean  robarCarta() {
+	public boolean  robarCarta() {
 		return this.controlador.robarCarta();
 	}
 
-	private boolean  cantidadJugadores(int cant) {
+	public boolean  cantidadJugadores(int cant) {
 		return this.controlador.cantidadJugadores(cant);
 		
 	}
 
-	private ICarta tirarCarta(int indice) {
+	public ICarta tirarCarta(int indice) {
 		return this.controlador.tirarCarta(indice);
 	}
 	
-	private void pasarJugador() {
+	public void pasarJugador() {
 		this.controlador.pasarJugador();
-	}
-	
+	}	
 
-	private void cambioPalo(String p) {
+	public void cambioPalo(String p) {
 		this.controlador.cambiarPalo(p);
 	}
 	
@@ -198,6 +171,9 @@ public class VistaConsola {
 		this.controlador = controlador;
 	}
 	
+	public int getCartaEspecial2() {
+		return this.controlador.getCartaEspecial2();
+	}
 
 	public void verCartaMazoAbajo(String cartas) {
 		System.out.println("");

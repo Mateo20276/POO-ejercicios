@@ -34,8 +34,7 @@ public class Mazo implements Cloneable {
 		}
 	}
 	public int tamanioMazo(){
-		int tamanio = this.getMazo().size();
-		
+		int tamanio = this.getMazo().size();	
 		return tamanio;
 		
 	}
@@ -45,7 +44,10 @@ public class Mazo implements Cloneable {
 	}
 	
 	public Carta obtenerCarta(int i) {
-		Carta carta = this.getMazo().get(i);
+		Carta carta = null;
+		if (!this.tamanioIgualCero()) {
+			carta = this.getMazo().get(i);
+		}
 		return carta;
 	}
 	
