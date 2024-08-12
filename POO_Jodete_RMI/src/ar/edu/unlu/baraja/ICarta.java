@@ -6,4 +6,6 @@ public interface ICarta extends Serializable{
 	public int getNumero();
 	
 	public Palo getPalo();
+
+	public String getPaloStr();
 }

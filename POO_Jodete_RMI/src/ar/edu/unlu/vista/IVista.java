@@ -9,15 +9,7 @@ import ar.edu.unlu.controlador.Controlador;
 public interface IVista {
 
 	public void menuPrincipal();
-	public void menuInicial();
-	public void cantarJodete() throws RemoteException;
-	public boolean  robarCarta() throws RemoteException;
-	public boolean  cantidadJugadores(int cant) throws RemoteException;
-	public ICarta tirarCarta(int indice) throws RemoteException;
-	public void pasarJugador() throws RemoteException;
-	public void cambioPalo(String p) throws RemoteException;
 	public void setControlador(Controlador controlador);
-	public int getCartaEspecial2() throws RemoteException;
 	public void verCartaMazoAbajo(String cartas);
 	public void verCartas(String cartas);
 	public void mostrarCartaInexistente();
@@ -29,14 +21,17 @@ public interface IVista {
 	public void mostrarNoSePuedeRobarCartas();
 	public void mostrarCambioRonda();
 	public void mostrarCartaTiradaCorrectamente();
-	public void mostrarCartaNormal();
-	public void mostrarCartaEspecial4();
-	public void mostrarCartaEspecial7();
-	public void mostrarCartaEspecial10();
-	public void mostrarCaraEspecial11();
-	public void mostrarCaraEspecial12();
 	public void mostrarCambioColor(Palo palo);
 	public void mostrarCantidadJugadoresErronea();
-	
-	
+	public void mostrarEsperandoJugadores();
+	public void mostrarListosParaComenzar();
+	public void obetnerOpcionElegida(String string) throws NumberFormatException, RemoteException;
+	public void mostrarOpcionesUsuario(boolean opcionb, boolean opcionc, boolean opciond, boolean opcionf);
+	public void seleecionCartaTirar() throws NumberFormatException, RemoteException;
+	public void mostrarJugadorAgregado(String nombre, Integer cantidad);
+	public void nombreJugador();
+	public void mostrarTest(String algo);
+	public void mostrarCartaTirada(Integer numero, String palo);
+	public void mostrarCantoJodete(Integer i);
+
 }

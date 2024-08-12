@@ -8,16 +8,15 @@ import ar.edu.unlu.juego.*;
 import ar.edu.unlu.observer.*;
 import ar.edu.unlu.rmimvc.cliente.IControladorRemoto;
 import ar.edu.unlu.rmimvc.observer.IObservableRemoto;
+import ar.edu.unlu.vista.EstadoJuego;
 import ar.edu.unlu.vista.IVista;
-import ar.edu.unlu.vista.VistaConsola;
 
 
 public class Controlador implements IControladorRemoto {
 	
 	private IVista vista;
-
-	private IJuego modelo;
-	
+	private IJuego modelo;	
+	private String jugador = "";	
 	public Controlador(IVista vista){;
 		this.vista = vista;
 		this.vista.setControlador(this);
@@ -26,147 +25,142 @@ public class Controlador implements IControladorRemoto {
 	
 	public void actualizar(IObservableRemoto arg0, Object evento) throws RemoteException {
 		if(evento instanceof Eventos) {
+			String ultimojugador = this.modelo.getUltimoJugadorAgregado();
+			String jugadoractual = this.modelo.getNombreJugadorActual();
 			switch((Eventos) evento) {
 			case CARTAS:
-				String cartas = this.modelo.mostrarManoJugador();
-				this.vista.verCartas(cartas);
-				cartas = this.modelo.mostrarCartaMazoAbajo();
+				if (!getJugador().equals("")) {
+					String cartas = this.modelo.mostrarManoJugador(getJugador());
+					this.vista.verCartas(cartas);
+				}
+				String cartas = this.modelo.mostrarCartaMazoAbajo();
 				this.vista.verCartaMazoAbajo(cartas);
 				break;
 			case CARTA_INEXISTENTE:
 				this.vista.mostrarCartaInexistente();
-				break;
-			
+				break;			
 			case JUGADOR_INICIAL:
-				String nombre = this.modelo.getNombreJugadorActual();
-				this.vista.mostrarCambioJugador(nombre);			
-				break;
-				
+				this.vista.mostrarCambioJugador(jugadoractual);			
+				break;				
 			case CARTA_NO_COINCIDENTE:
 				this.vista.mostrarCartaNoCoincidente();
-				break;
-			
-			case CANTIDAD_JUGADORES:
-				int cantidad = this.modelo.getNumeroJugadores();
-				this.vista.mostrarCantidadJugadores(cantidad);
-				break;
-				
+				break;				
 			case COMIENZA_EL_JUEGO:
 				this.vista.mostrarComienzoJuego();
-				break;
-			
+				break;				
+			case ESPERANDO_JUGADORES:
+				this.vista.mostrarJugadorAgregado(ultimojugador, this.modelo.getNumeroJugadores());
+				if (!getJugador().equals("")) {				
+					this.vista.mostrarEsperandoJugadores();
+					}
+				else {
+					this.vista.nombreJugador();
+				}
+				break;				
+			case LISTOS_PARA_COMENZAR:
+				this.vista.mostrarJugadorAgregado(ultimojugador, this.modelo.getNumeroJugadores());
+				if (!getJugador().equals("")) {				
+					this.vista.mostrarListosParaComenzar();
+					}
+				else {
+					this.vista.nombreJugador();
+				}
+				break;				
+			case SELECCIONAR_CARTA_A_TIRAR:
+				if (jugadoractual.equals(getJugador())) {
+					this.vista.seleecionCartaTirar();
+				}
+				break;				
 			case CAMBIAR_JUGADOR:
-				String nombre1 = this.modelo.getNombreJugadorActual();
 				this.vista.mostrarFinTurno();
-				this.vista.mostrarCambioJugador(nombre1);			
+				this.vista.mostrarCambioJugador(jugadoractual);			
 				break;
 			
+			case MOSTRAR_OPCIONES:
+				if (jugadoractual.equals(getJugador())) {
+					this.vista.mostrarOpcionesUsuario(this.modelo.getOpcionb(),this.modelo.getOpcionc(),this.modelo.getOpciond(),this.modelo.getOpcionf());
+				}
+				break;				
+			case SELECCIONAR_OPCIONES:
+				if (jugadoractual.equals(this.getJugador())) {
+					String opc = this.modelo.getOp();
+					this.modelo.setOp("");
+					this.vista.obetnerOpcionElegida(opc);
+				}			
+				break;
+			case CANTO_JODETE:
+				this.vista.mostrarCantoJodete(1);
+				break;
+			case JODETE_LEVENTAS_MAL_CANTADO:
+				this.vista.mostrarCantoJodete(2);
+				break;
+			case JODETE_LEVENTAS_NO_CANTASTE:
+				this.vista.mostrarCantoJodete(3);
+				break;
 			case NO_ES_POSIBLE_ROBAR_CARTAS:
 				this.vista.mostrarNoSePuedeRobarCartas();
-				break;
-			
+				break;		
 			case CAMBIAR_RONDA:
 				this.vista.mostrarCambioRonda();
-				break;
-				
+				break;				
 			case CARTA_TIRADA_CORRECTAMENTE:	
 				this.vista.mostrarCartaTiradaCorrectamente();
-				break;
-
-				
-			case CARTA_TIRADA_NORMAL:
-				this.vista.mostrarCartaNormal();
-				break;
-				
-			case CARTA_ESPECIAL_4:
-				this.vista.mostrarCartaEspecial4();
-				break;
-				
-			case CARTA_ESPECIAL_7:
-				this.vista.mostrarCartaEspecial7();
-				break;
-				
-			case CARTA_ESPECIAL_10:
-				this.vista.mostrarCartaEspecial10();
-				break;
-				
-			case CARTA_ESPECIAL_11:
-				this.vista.mostrarCaraEspecial11();
-				break;
-				
-			case CARTA_ESPECIAL_12:
-				this.vista.mostrarCaraEspecial12();
+				break;				
+			case CARTA_TIRADA:
+				this.vista.mostrarCartaTirada(this.modelo.getCartaEnJuegoNumero(), this.modelo.getCartaEnJuegoPalo());
 				break;
 			case CAMBIO_COLOR:
 				Palo palo = this.modelo.getMazoAbajo().obtenerUltimaCarta().getPalo();
 				this.vista.mostrarCambioColor(palo);
-				break;
-				
+				break;				
 			case CANTIDAD_JUGADORES_ERRONEA:
 				this.vista.mostrarCantidadJugadoresErronea();
-			case CARTA_ESPECIAL_2:
-				break;
 			case CARTA_ESPECIAL_COMODIN:
+				break;
+			case TEST:
+				String algo = this.modelo.getalgo();
+				this.vista.mostrarTest(algo);
 				break;
 			default:
 				break;
 
 			}
-		}
-		
+		}	
 	}
 
-	public String verCartas() throws RemoteException {
-		return this.modelo.mostrarManoJugador();		
-	}
-
-	public void pasarJugador() throws RemoteException {		
-			this.modelo.pasarJugador();	
-	}
-
-	public boolean cantidadJugadores(int cant) throws RemoteException {
-		return this.modelo.cantidadJugadores(cant);
-		
+	private String getJugador() {
+		return jugador;
 	}
 	
-	public int getCartaEspecial2() throws RemoteException {
-		return this.modelo.getCartaEspecial2();
+	public void setJugador(String jugador) {
+		this.jugador = jugador;
 	}
 
 	public String verCartaMazoAbajo() throws RemoteException {
 		return this.modelo.mostrarCartaMazoAbajo();
 	}
-	
-	public boolean robarCarta() throws RemoteException{
-		return this.modelo.robarCarta(true);
+
+	public void cargarNombreJugadores(String nombre) throws RemoteException {
+		this.modelo.cargarNombreJugadores(nombre);
 	}
 
-	public void cargarNombreJugadores(String nombre, int i) throws RemoteException {
-		this.modelo.cargarNombreJugadores(nombre,i);
-	}
-
-	public void cantarJodete() throws RemoteException {
-		this.modelo.cantoJodete();
-		
-	}
-		
-	public ICarta  tirarCarta(int indice) throws RemoteException {
-		return  this.modelo.tirarCarta(indice);
-	}
-	
-	public void cambiarPalo(String p) throws RemoteException {
-		this.modelo.cartaComodin10(p);
-	}
-
-	@Override
 	public <T extends IObservableRemoto> void setModeloRemoto(T arg0) throws RemoteException {
-		this.modelo = (IJuego) arg0;
-		
+		this.modelo = (IJuego) arg0;		
 	}
 
+	public void comenzarJuego() throws RemoteException {
+		this.modelo.comenzarJuego();		
+	}
+
+	public void mostrarOpcionesUsuarioJugando() throws RemoteException {
+		this.modelo.jugadorAJugar();		
+	}
+
+	public void seleccionarOpcion(String opcion) throws RemoteException {
+		this.modelo.seleccionarOpcion(opcion);		
+	}
+
+	public EstadoJuego opcionesDeJuego(EstadoJuego estadoJuegoSegunSeleccion, String cartanum) throws NumberFormatException, RemoteException {
+		return this.modelo.opcionesDeJuego(estadoJuegoSegunSeleccion,cartanum);		
+	}
 }
-	
-	
-	
-
-

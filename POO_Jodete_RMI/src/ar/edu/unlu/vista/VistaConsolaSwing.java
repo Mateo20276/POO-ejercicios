@@ -31,20 +31,12 @@ public class VistaConsolaSwing implements IVista {
 	private final JButton btnBoton = new JButton("Aceptar");
 	private JTextArea textVista;
 	private Controlador controlador;
-	private Estados estadoActual = Estados.CARGAR_NUMERO_JUGADORES;
-	private int CantidadJugadores;
-	private int CantidadJugadoresActual = 0;
-	private ArrayList<String> jugadores = new ArrayList<String>();
+	private Estados estadoActual = Estados.JUEGO_CARGAR_NOMBRE_JUGADORES;
 	private EstadoJuego estadoJuegoActual = EstadoJuego.MOSTRAR_OPCIONES_USUARIO;
-	private EstadoJuego estadoJuegoActualopciones;
-	boolean opcionb = true;
-	boolean opcionc = true;
-	boolean opciond = false;
-	boolean opcionf = false;
+	private String cartaTirar = "";
 
 	public void println(String texto) {
-		textVista.append(texto + "\n");
-		
+		textVista.append(texto + "\n");	
 	}
 	
 	public void println() {
@@ -132,73 +124,42 @@ public class VistaConsolaSwing implements IVista {
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
+				RowSpec.decode("max(38dlu;default)"),
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
+				RowSpec.decode("max(45dlu;default)"),
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
+				RowSpec.decode("max(43dlu;default)"),
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
+				RowSpec.decode("max(76dlu;default)"),
 				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(0dlu;default):grow"),}));
+				RowSpec.decode("max(20dlu;default):grow"),}));
 		
 		JScrollPane scrollPane = new JScrollPane();
-		frame.getContentPane().add(scrollPane, "2, 1, 41, 35, fill, fill");
-		
+		frame.getContentPane().add(scrollPane, "2, 1, 41, 36, fill, fill");
+	
 		textVista = new JTextArea();
-		textVista.setColumns(0);
 		scrollPane.setViewportView(textVista);
 		
 		textInput = new JTextField();
 		frame.getContentPane().add(textInput, "2, 38, 39, 1");
-		textInput.setColumns(10);
-		menuInicial();
+		textInput.setColumns(0);
+		jodete();
+		nombreJugador();
 		btnBoton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (estadoActual == Estados.CARGAR_NUMERO_JUGADORES) {			// comienza cargando el numero de jugadores		
-					CantidadJugadores = Integer.parseInt(textInput.getText());
+				if (estadoActual == Estados.JUEGO_CARGAR_NOMBRE_JUGADORES) {// el juego carga a los jugadores con su nombre y comienza el juego
 					try {
-						if (cantidadJugadores(CantidadJugadores)) {
-							estadoActual = Estados.CARGANDO_NOMBRE_JUGADORES;	
-							textInput.setText("");	
-						}
+						String nom = textInput.getText();
+						controlador.setJugador(nom);
+						controlador.cargarNombreJugadores(nom);
 					} catch (RemoteException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-				}
-				if (estadoActual == Estados.CARGANDO_NOMBRE_JUGADORES) {		// luego se cargan los nombres
-					if((CantidadJugadoresActual == CantidadJugadores )) {
-						agregarJugadores();
-						estadoActual = Estados.JUEGO_CARGAR_NOMBRE_JUGADORES;	
-						CantidadJugadoresActual = 0;
-						textInput.setText("");	
-					}
-					else{						
-						CantidadJugadoresActual = CantidadJugadoresActual + 1;
-						println("");
-						println("Escriba el nombre del jugador " + (CantidadJugadoresActual));
-						agregarJugadores();
-						textInput.setText("");	
-						}
-				}
-				if (estadoActual == Estados.JUEGO_CARGAR_NOMBRE_JUGADORES) {	// el juego carga a los jugadores con su nombre y se muestran sus cartas
-					for (int i = 1; i < jugadores.size(); i++) {
-						try {
-							controlador.cargarNombreJugadores(jugadores.get(i), CantidadJugadoresActual);
-						} catch (RemoteException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						textInput.setText("");
-						CantidadJugadoresActual = CantidadJugadoresActual + 1;
-					}
-					estadoActual = Estados.COMIENZO_JUEGO;
+					textInput.setText("");
 				}	
-				try {
+				try {					
 					mostrarJuegoInterfaz();
 				} catch (NumberFormatException | RemoteException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
@@ -208,202 +169,110 @@ public class VistaConsolaSwing implements IVista {
 		frame.setVisible(true);
 	}
 	
-	@Override
+	public void mostrarJuegoInterfaz() throws NumberFormatException, RemoteException {
+		println("");
+		if (estadoActual == Estados.LISTOS_PARA_COMENZAR) {
+			String comienzo = textInput.getText();
+			textInput.setText("");
+			if (comienzo.equals("si")) {
+				comenzarJuego();
+			}
+		}		
+		if (estadoActual == Estados.COMIENZO_JUEGO) { //inicia el juego
+			if (estadoJuegoActual == EstadoJuego.TIRANDO_CARTA){
+				String cartaTirar = textInput.getText();
+				textInput.setText("");
+				this.cartaTirar = cartaTirar;
+				this.controlador.seleccionarOpcion("b");	
+			}
+			if (estadoJuegoActual == EstadoJuego.OPCION_SELECCIONADA) {
+				String opcion = textInput.getText();
+				textInput.setText("");
+				this.controlador.seleccionarOpcion(opcion);
+			}
+			if (estadoJuegoActual == EstadoJuego.MOSTRAR_OPCIONES_USUARIO) {
+				this.controlador.mostrarOpcionesUsuarioJugando();				
+			}
+		}
+	}
+	
+	public void mostrarOpcionesUsuario(boolean opcionb, boolean opcionc, boolean opciond, boolean opcionf) {
+		menuPrincipal();
+		if (opcionb) {println("b - Tirar carta");}
+		if(opcionc) {println("c - Robar una carta");}
+		if (opciond) {println("d - Terminar turno");}
+		println("e - Cantar jodete");
+		if (opcionf) {println("f - Cambiar de palo");}
+		println("g - No canto jodete el jugador anterior");
+		estadoJuegoActual = EstadoJuego.OPCION_SELECCIONADA;
+	}
+
+	private EstadoJuego estadoJuegoSegunSeleccion(String opcion) {			
+		switch (opcion) {
+		case "b":return EstadoJuego.OPCION_B;				
+		case "c":return  EstadoJuego.OPCION_C;				
+		case "d":return EstadoJuego.OPCION_D;				
+		case "e":return  EstadoJuego.OPCION_E;				
+		case "f":return EstadoJuego.OPCION_F;
+		case "g":return EstadoJuego.OPCION_G;
+		}
+		if(opcion.equals("")) {return EstadoJuego.OPCION_INVALIDA;}
+		return null;
+		
+	}
+		
+	private void comenzarJuego() throws RemoteException {
+		this.controlador.comenzarJuego();		
+	}
+	
+	public void obetnerOpcionElegida(String op) throws NumberFormatException, RemoteException {
+		estadoJuegoActual = this.controlador.opcionesDeJuego(estadoJuegoSegunSeleccion(op), this.cartaTirar);
+		this.cartaTirar = "";
+	}
+	
 	public void menuPrincipal() {
+		println("");
 		println("Selecciona una opción:");		
 	}
-	@Override
-	public void menuInicial() {
+
+	public void jodete() {
 		println("########################");
 		println("####### JODETE #######");
 		println("########################");
 		println();	
 		println();
-		println("Escriba la cantidad de jugadores (2 a 6)");		
+	
+	}
+	public void nombreJugador() {
+		println("");
+		println("Escriba nombre de jugador");
 	}
 		
-	private void agregarJugadores() {
-		String nom = textInput.getText();
-		this.jugadores.add(nom);
-	}
-	
-	public void cantarJodete() throws RemoteException {
-		this.controlador.cantarJodete();
-		
-	}
-
-	public boolean  robarCarta() throws RemoteException {
-		return this.controlador.robarCarta();
-	}
-
-	public boolean  cantidadJugadores(int cant) throws RemoteException {
-		return this.controlador.cantidadJugadores(cant);
-		
-	}
-
-	public ICarta tirarCarta(int indice) throws RemoteException {
-		return this.controlador.tirarCarta(indice);
-	}
-	
-	public void pasarJugador() throws RemoteException {
-		this.controlador.pasarJugador();
-	}	
-
-	public void cambioPalo(String p) throws RemoteException {
-		this.controlador.cambiarPalo(p);
-	}
-	
 	public void setControlador(Controlador controlador) {
 		this.controlador = controlador;
 	}
-	
-	public int getCartaEspecial2() throws RemoteException {
-		return this.controlador.getCartaEspecial2();
-	}
-	
-	public void mostrarOpcionesUsuario(boolean opcionb, boolean opcionc, boolean opciond, boolean opcionf) {
-		if (opcionb) {	
-			println("b - Tirar carta");
-		}
-		if(opcionc) {
-			println("c - Robar una carta");
-		}
-		if (opciond) {
-			println("d - Terminar turno");
-		}
-			println("e - Cantar jodete");
-		if (opcionf) {
-			println("f - Cambiar de palo");
-		}
-	}
 
-	public ICarta opcionb() throws NumberFormatException, RemoteException {
-		
-		String carta = textInput.getText();
-		if (!(carta.equals("")) && (!carta.equals("b"))) {
-			ICarta cartaax = this.tirarCarta(Integer.parseInt(carta));
-			textInput.setText("");	
-			estadoJuegoActualopciones = EstadoJuego.TIRANDO_CARTA;
-			return cartaax;
-		}
-		else {
-			println("Seleccione carta a tirar");
-			textInput.setText("");
-			return null;}
-	}
-
-	public void estadoJuegoSegunSeleccion(String opcion) {
-		
-		if(!opcion.equals("")) {this.estadoJuegoActual = EstadoJuego.OPCION_INVALIDA;}
-			
-		switch (opcion) {
-		case "b":this.estadoJuegoActual = EstadoJuego.OPCION_B;
-			break;
-				
-		case "c":this.estadoJuegoActual = EstadoJuego.OPCION_C;
-			break;
-				
-		case "d":this.estadoJuegoActual = EstadoJuego.OPCION_D;
-			break;
-				
-		case "e":this.estadoJuegoActual = EstadoJuego.OPCION_E;
-			break;
-				
-		case "f":this.estadoJuegoActual = EstadoJuego.OPCION_F;
-			break;
-		}
-		
-	}
-	
-	public void mostrarJuegoInterfaz() throws NumberFormatException, RemoteException {
-		if (estadoActual == Estados.COMIENZO_JUEGO) { //inicia el juego
-			
-			if (estadoJuegoActual == EstadoJuego.MOSTRAR_OPCIONES_USUARIO) {
-				menuPrincipal();
-				mostrarOpcionesUsuario(opcionb, opcionc,opciond,opcionf);
-				estadoJuegoActual = EstadoJuego.OPCION_SELECCIONADA;	
-			}
-			if (estadoJuegoActual == EstadoJuego.OPCION_SELECCIONADA) {
-				String opcion = textInput.getText();
-				estadoJuegoSegunSeleccion(opcion);
-				
-			}
-			if (estadoJuegoActual != EstadoJuego.OPCION_SELECCIONADA) {
-				switch((EstadoJuego) estadoJuegoActual) {
-				
-				case OPCION_B: opciond = true;
-							   opcionb = false;
-						       opcionc = false;
-						       ICarta carta = this.opcionb();
-						       if (estadoJuegoActualopciones == EstadoJuego.TIRANDO_CARTA) {
-						    	   if(carta == null) {						    	   
-							    	   opcionb = true;
-							    	   opcionc = true;
-							    	   opciond = false;
-							       }
-							       else if (carta.getNumero() == 7 || carta.getNumero()== 11) {
-										opcionb = true;
-										opcionc = false;
-										opciond = true;
-									}
-									else if (carta.getNumero() == 10) {
-										opcionb = false;
-										opcionc = false;
-										opciond = false;
-										opcionf = true;
-									}
-						    	   estadoJuegoActualopciones = EstadoJuego.FIN;
-						    	   estadoJuegoActual = EstadoJuego.MOSTRAR_OPCIONES_USUARIO;
-						    	   mostrarJuegoInterfaz();
-						       }						      
-					break;
-					
-				case OPCION_C:  estadoJuegoActual = EstadoJuego.MOSTRAR_OPCIONES_USUARIO;
-								textInput.setText("");
-								opcionc = false;
-								opciond = true;
-								
-								if (this.getCartaEspecial2() !=0) {
-									opcionb=false;
-								}
-								if(!this.robarCarta()) {
-									opcionc = true;
-									opciond = false;
-								}
-								
-								mostrarJuegoInterfaz();
-									break;
-					
-				case OPCION_D:  estadoJuegoActual = EstadoJuego.MOSTRAR_OPCIONES_USUARIO;
-								textInput.setText("");	
-								this.pasarJugador();
-								opciond = false;
-								opcionc = true;
-								opcionb = true;							  
-					break;
-					
-				case OPCION_E:  estadoJuegoActual = EstadoJuego.MOSTRAR_OPCIONES_USUARIO;
-								textInput.setText("");	;
-								this.cantarJodete();
-					break;
-					
-				case OPCION_INVALIDA:	estadoJuegoActual = EstadoJuego.MOSTRAR_OPCIONES_USUARIO;
-										textInput.setText("");				
-					break;
-				}
-			}
-		}
-	}
-	
-	
-	public void verCartaMazoAbajo(String cartas) {
+	public void seleecionCartaTirar() throws NumberFormatException, RemoteException {
 		println("");
-		println(cartas);
+		println("Seleccione carta a tirar");
+	}
+	
+	public void verCartaMazoAbajo(String carta) {
+		println("");
+		if(carta.equals("")) {
+			println("No hay carta sobre la mesa");
+		}
+		else {println("Carta boca arriba: " + carta);}
 	}
 
 	public void verCartas(String cartas){
 		println("");
 		println(cartas);
+	}
+		
+	public void mostrarEsperandoJugadores() {
+		println("");
+		println("Esperando Jugadores");		
 	}
 	
 	public void mostrarCartaInexistente() {
@@ -415,6 +284,12 @@ public class VistaConsolaSwing implements IVista {
 		println("");
 		println("Carta con numero o palo no valido");		
 	}
+	
+	public void mostrarListosParaComenzar() {
+		println("");
+		println("Comenzar juego (S/N)?");
+		estadoActual = Estados.LISTOS_PARA_COMENZAR;			
+	}
 
 	public void mostrarCantidadJugadores(int cantidad) {
 		println("");
@@ -425,7 +300,8 @@ public class VistaConsolaSwing implements IVista {
 
 	public void mostrarComienzoJuego() {
 		println("");
-		println("El juego ha comenzado");		
+		println("El juego ha comenzado");	
+		estadoActual = Estados.COMIENZO_JUEGO;
 	}
 
 	public void mostrarFinTurno() {
@@ -452,49 +328,26 @@ public class VistaConsolaSwing implements IVista {
 
 	public void mostrarCartaTiradaCorrectamente() {
 		println("");
-		println("Carta tirada correctamente");		
+		println("Carta tirada correctamente");					
 	}
-
-	public void mostrarCartaNormal() {
+	public void mostrarCartaTirada(Integer numero, String palo) {
 		println("");
-		println("Carta normal tirada");
-	}
-	
-	public void mostrarCartaEspecial4() {
+		println("Carta "+ numero + " de" + palo + " tirada");
 		println("");
-		println("Carta especial 4 tirada");
-		println("");
-		println("El siguiente jugador pierde su turno");		
-		
-	}
-	public void mostrarCartaEspecial7() {
-		println("");
-		println("Carta especial 7 tirada");
-		println("");
-		println("Puedes tirar otra carta");
-		
-	}
-	
-	public void mostrarCartaEspecial10() {
-		println("");
-		println("Carta especial 10 tirada");
-		println("");
-		println("Puedes tirar otra carta");
-		
-	}
-
-	public void mostrarCaraEspecial11() {
-		println("");
-		println("Carta especial 11 tirada");
-		println("");
-		println("Cambio de palo");
-	}
-
-	public void mostrarCaraEspecial12() {
-		println("");
-		println("Carta especial 12 tirada");
-		println("");
-		println("Cambio de sentido la ronda");
+			switch((Integer)numero) {
+			case 2:println("El jugador levantara carta extra	");
+				break;
+			case 4:println("El siguiente jugador pierde su turno");
+				break;
+			case 7:println("Puedes tirar otra carta");	
+				break;
+			case 10:println("Puedes tirar otra carta");
+				break;
+			case 11:println("Cambio de palo");
+				break;
+			case 12:println("Cambio de sentido la ronda");
+				break;
+			}
 	}
 
 	public void mostrarCambioColor(Palo palo) {
@@ -505,10 +358,28 @@ public class VistaConsolaSwing implements IVista {
 	public void mostrarCantidadJugadoresErronea() {
 		println("");
 		println("Cantidad de jugadores erronea");	
+	}	
+	
+	public void mostrarJugadorAgregado(String nombre, Integer cantidad) {
+		println("");
+		println("El jugador " + nombre + " fue agregado");	
+		println("Cantidad jugadores: " + cantidad);	
 	}
-
 	
+	public void mostrarTest(String algo) {
+		println();
+		println("test: " +algo);
+	}
 	
-	
-
+	public void mostrarCantoJodete(Integer canto) {
+		println();
+		switch((Integer)canto) {
+		case 1:	println("Cantaste Jodete");
+			break;
+		case 2: println("Jodete mal cantado, levantas 5 cartas");
+			break;
+		case 3: println("El jugador anteror no canto jodete, levanta 5 cartas");
+			break;
+		} 
+	}
 }

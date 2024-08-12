@@ -34,24 +34,12 @@ public class Jugador implements Serializable {
 		Carta carta = this.mano.get(indice);
 		return carta;
 		
-	}
-	
+	}	
 	public boolean jodete() {
-/*		boolean resultado = this.mano.size() == 1;
-		if (this.mano.size() == 1) {
-			resultado = true;
-		}
-		
-		return resultado;		*/
 		return (this.mano.size() == 1);
 	}
 	
 	public boolean cantidadCartasCero() {
-		/*boolean resultado = false;
-		if (this.getCantidadCartas() == 0) {
-			resultado = true;			
-		}
-		return resultado;*/
 		return (this.getCantidadCartas() == 0);
 	}
 	

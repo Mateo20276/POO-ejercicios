@@ -8,7 +8,9 @@ public enum EstadoJuego {
 	OPCION_D,
 	OPCION_E,
 	OPCION_F,
+	OPCION_G,
 	TIRANDO_CARTA,
 	OPCION_INVALIDA,
 	FIN,
+	COMIENZO_JUEGO
 }

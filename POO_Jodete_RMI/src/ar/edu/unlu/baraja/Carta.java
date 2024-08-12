@@ -55,6 +55,9 @@ public class Carta implements ICarta, Serializable{
 	public int getNumero() {
 		return numero;
 	}
+	public String getPaloStr() {
+		return ""+palo;
+	}
 
 	private void setNumero(int numero) {
 		this.numero = numero;
