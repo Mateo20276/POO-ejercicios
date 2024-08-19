@@ -27,6 +27,7 @@ public class Controlador implements IControladorRemoto {
 		if(evento instanceof Eventos) {
 			String ultimojugador = this.modelo.getUltimoJugadorAgregado();
 			String jugadoractual = this.modelo.getNombreJugadorActual();
+			Palo palo = this.modelo.getPalo();
 			switch((Eventos) evento) {
 			case CARTAS:
 				if (!getJugador().equals("")) {
@@ -34,7 +35,7 @@ public class Controlador implements IControladorRemoto {
 					this.vista.verCartas(cartas);
 				}
 				String cartas = this.modelo.mostrarCartaMazoAbajo();
-				this.vista.verCartaMazoAbajo(cartas);
+				this.vista.verCartaMazoAbajo(cartas, palo);
 				break;
 			case CARTA_INEXISTENTE:
 				this.vista.mostrarCartaInexistente();
@@ -56,7 +57,10 @@ public class Controlador implements IControladorRemoto {
 				else {
 					this.vista.nombreJugador();
 				}
-				break;				
+				break;	
+			case JODETE_LEVANTAS_0_CANTADO:	
+				this.vista.mostrarJodete0();
+				break;
 			case LISTOS_PARA_COMENZAR:
 				this.vista.mostrarJugadorAgregado(ultimojugador, this.modelo.getNumeroJugadores());
 				if (!getJugador().equals("")) {				
@@ -110,7 +114,7 @@ public class Controlador implements IControladorRemoto {
 				this.vista.mostrarCartaTirada(this.modelo.getCartaEnJuegoNumero(), this.modelo.getCartaEnJuegoPalo());
 				break;
 			case CAMBIO_COLOR:
-				Palo palo = this.modelo.getMazoAbajo().obtenerUltimaCarta().getPalo();
+				
 				this.vista.mostrarCambioColor(palo);
 				break;				
 			case CANTIDAD_JUGADORES_ERRONEA:
@@ -162,5 +166,10 @@ public class Controlador implements IControladorRemoto {
 
 	public EstadoJuego opcionesDeJuego(EstadoJuego estadoJuegoSegunSeleccion, String cartanum) throws NumberFormatException, RemoteException {
 		return this.modelo.opcionesDeJuego(estadoJuegoSegunSeleccion,cartanum);		
+	}
+
+	public void cartaComodin10(String palo) throws RemoteException {
+		this.modelo.cartaComodin10(palo);
+		
 	}
 }

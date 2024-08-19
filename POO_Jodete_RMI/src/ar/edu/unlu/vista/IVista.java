@@ -10,7 +10,7 @@ public interface IVista {
 
 	public void menuPrincipal();
 	public void setControlador(Controlador controlador);
-	public void verCartaMazoAbajo(String cartas);
+	public void verCartaMazoAbajo(String cartas, Palo paloj);
 	public void verCartas(String cartas);
 	public void mostrarCartaInexistente();
 	public void mostrarCartaNoCoincidente();
@@ -33,5 +33,6 @@ public interface IVista {
 	public void mostrarTest(String algo);
 	public void mostrarCartaTirada(Integer numero, String palo);
 	public void mostrarCantoJodete(Integer i);
+	public void mostrarJodete0();
 
 }

@@ -7,11 +7,11 @@ public class Carta implements ICarta, Serializable{
 	
 	private Palo palo;// (palo 1 = espada), (palo 2 = basto), (palo 3 = oro), (palo 4 = copa).
 
-	private Palo cambioPalo = null;
-	
-	private boolean cambioJugador = false; //Cuando se tira un 4. Cuando se tira un 12 con 2 jugadore
+	private boolean cambioJugador = false; //Cuando se tira un 4. Cuando se tira un 12 con 2 jugadores
 	
 	private int levantar2Cartas = 0;//Cuando se tira un 2
+	
+	private boolean jodete0 = false;//cuando cantan jodete con 0
 	
 	public Carta(int numero, Palo palo) {
 		super();
@@ -19,38 +19,10 @@ public class Carta implements ICarta, Serializable{
 		this.setPalo(palo);		
 }
 
-	
-	@Override
 	public String toString() {
 		return "Carta [numero=" + numero + ", palo=" + palo + "]";
 	}
-	
 
-	public Palo cambiarUnPalo(String p) {
-		Palo palo = null;
-		Palo paloguardar = this.getPalo();
-		switch (p.toLowerCase()) {
-		case "c":
-			palo = Palo.COPA;
-			break;
-			
-		case "o":
-			palo = Palo.ORO;
-			break;
-			
-		case "e":
-			palo = Palo.ESPADA;
-			break;
-			
-		case "b":
-			palo = Palo.BASTO;
-			break;
-		}
-		this.setPalo(palo);
-		
-		return paloguardar;
-		
-	}
 
 	public int getNumero() {
 		return numero;
@@ -95,13 +67,13 @@ public class Carta implements ICarta, Serializable{
 	public void restLevantar2Cartas() {
 		this.levantar2Cartas = levantar2Cartas - 1;
 	}
-	
-	public void setcambioPalo(Palo palo) {
-		this.cambioPalo = palo;
+
+	public void setJodete0(boolean res){
+		this.jodete0 = res;
 	}
 	
-	public Palo getcambioPalo() {
-		return this.cambioPalo;
+	public boolean getJodete0(){
+		return this.jodete0;
 	}
 	
 	

@@ -8,4 +8,8 @@ public interface ICarta extends Serializable{
 	public Palo getPalo();
 
 	public String getPaloStr();
+	
+	public void setJodete0(boolean res);
+	
+	public boolean getJodete0();
 }

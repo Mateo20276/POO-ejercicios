@@ -15,8 +15,9 @@ public class Jugador implements Serializable {
 	private String nombre;
 	
 	private boolean jodete = false;
+
+	private boolean perdio = false;
 		
-	
 	public Jugador() {
 		super();
 		this.mano = new ArrayList<>();
@@ -50,12 +51,20 @@ public class Jugador implements Serializable {
 	public void limpiarManoJugador() {
 		this.mano.clear();
 	}
-	
-	@Override
+
 	public String toString() {
 		return "Jugador [mano=" + mano + "]";
 	}
 
+	public void SumarPuntos(Integer x) {
+		for (Integer i = 0; i < this.getCantidadCartas(); i++) {
+			Integer numero = mano.get(i).getNumero();
+			if ((numero == 10) || (numero == 0)){
+				setPuntos(25 * x + getPuntos());
+			}
+			else {setPuntos(numero * x + getPuntos());}
+		}
+	}
 
 	public void sumarCarta(Carta carta) {
 		this.mano.add(carta);
@@ -70,7 +79,14 @@ public class Jugador implements Serializable {
 		mano.remove(indice);	
 	}
 	
-
+	public void setPerdio(boolean r) {
+		this.perdio = r;
+	}
+	
+	public boolean getPerdio() {
+		return this.perdio;
+	}
+	
 	public ArrayList<Carta> getMano() {
 		return mano;
 	}

@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 
 import ar.edu.unlu.baraja.ICarta;
 import ar.edu.unlu.baraja.Mazo;
+import ar.edu.unlu.baraja.Palo;
 import ar.edu.unlu.jugador.Jugador;
 import ar.edu.unlu.rmimvc.observer.IObservableRemoto;
 import ar.edu.unlu.vista.EstadoJuego;
@@ -46,5 +47,6 @@ public interface IJuego extends IObservableRemoto, Serializable{
 	String getCartaEnJuegoPalo()throws RemoteException;
 	String getalgo() throws RemoteException;
 	void setOp(String string)throws RemoteException;
+	Palo getPalo()throws RemoteException;
 
 }

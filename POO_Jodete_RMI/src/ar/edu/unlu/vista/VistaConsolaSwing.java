@@ -119,20 +119,7 @@ public class VistaConsolaSwing implements IVista {
 				FormSpecs.DEFAULT_ROWSPEC,
 				FormSpecs.RELATED_GAP_ROWSPEC,
 				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(38dlu;default)"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(45dlu;default)"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(43dlu;default)"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(76dlu;default)"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("max(20dlu;default):grow"),}));
+				FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(38dlu;default)"),FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(45dlu;default)"),FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(43dlu;default)"),FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(76dlu;default)"),FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(20dlu;default):grow"),}));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		frame.getContentPane().add(scrollPane, "2, 1, 41, 36, fill, fill");
@@ -179,6 +166,11 @@ public class VistaConsolaSwing implements IVista {
 			}
 		}		
 		if (estadoActual == Estados.COMIENZO_JUEGO) { //inicia el juego
+			if (estadoJuegoActual == EstadoJuego.CAMBIO_PALO) {
+				String palo = textInput.getText();
+				textInput.setText("");
+				this.controlador.cartaComodin10(palo);
+			}
 			if (estadoJuegoActual == EstadoJuego.TIRANDO_CARTA){
 				String cartaTirar = textInput.getText();
 				textInput.setText("");
@@ -257,12 +249,9 @@ public class VistaConsolaSwing implements IVista {
 		println("Seleccione carta a tirar");
 	}
 	
-	public void verCartaMazoAbajo(String carta) {
+	public void verCartaMazoAbajo(String carta, Palo palo) {
 		println("");
-		if(carta.equals("")) {
-			println("No hay carta sobre la mesa");
-		}
-		else {println("Carta boca arriba: " + carta);}
+		println("Carta boca arriba: " + carta + " (Palo en juego: " + palo + ")");
 	}
 
 	public void verCartas(String cartas){
@@ -332,24 +321,32 @@ public class VistaConsolaSwing implements IVista {
 	}
 	public void mostrarCartaTirada(Integer numero, String palo) {
 		println("");
-		println("Carta "+ numero + " de" + palo + " tirada");
+		if (numero != 0) {println("Carta "+ numero + " de" + palo + " tirada");}
+		else {println("Carta comodin tirada, levanta 5 cortas si cantaste jodete");
+			  println("Se puede tirar cualquier carta");}
 		println("");
 			switch((Integer)numero) {
-			case 2:println("El jugador levantara carta extra	");
+			
+			case 2:println("El jugador levantara cartas extra");
 				break;
 			case 4:println("El siguiente jugador pierde su turno");
 				break;
 			case 7:println("Puedes tirar otra carta");	
 				break;
-			case 10:println("Puedes tirar otra carta");
+			case 10:println("Cambio de palo, seleccione palo a cambia:");
+					println("oro, basto, copa, espada");
 				break;
-			case 11:println("Cambio de palo");
+			case 11:println("Puedes tirar otra carta");
 				break;
 			case 12:println("Cambio de sentido la ronda");
 				break;
 			}
 	}
 
+	public void mostrarJodete0() {
+		println();
+		println("El siguiente jugador levanta 5 cartas");
+	}
 	public void mostrarCambioColor(Palo palo) {
 		println("");
 		println("El palo a sido cambiado a: " + palo);		
