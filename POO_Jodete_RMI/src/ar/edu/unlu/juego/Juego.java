@@ -9,9 +9,10 @@ import ar.edu.unlu.vista.EstadoJuego;
 
 
 public class Juego extends ObservableRemoto implements IJuego,Serializable{
-	private static final long serialVersionUID = 8947140650500952205L;
+	private static final long serialVersionUID = 1L;
 	private static final Integer numeroMaximoJugadores = 6;	
 	private static final Integer numeroMinimoJugadores = 2;
+	private static final Integer puntosPerdedor = 5;
 	private Integer jugadorInicial;	
 	private Integer jugadorActual;	
 	private Integer numeroJugadores = 0;	
@@ -83,7 +84,7 @@ public class Juego extends ObservableRemoto implements IJuego,Serializable{
 		return veri;		
 	}
 
-	private boolean cartaArribaMazoAbajo(Carta carta) {//verifica la carta boca arriba del mazo antes de tirar una carta
+	private boolean cartaArribaMazoAbajo(Carta carta) throws RemoteException {//verifica la carta boca arriba del mazo antes de tirar una carta
 		boolean resultado = false;	
 
 		if(this.mazoAbajo.tamanioIgualCero()) {
@@ -92,6 +93,8 @@ public class Juego extends ObservableRemoto implements IJuego,Serializable{
 		
 		else if ((ultimaCartaMazo().getNumero() == carta.getNumero()) || (getPalo() == carta.getPalo()) || (carta.getNumero() == 0) || (ultimaCartaMazo().getNumero() == 0)) {
 			resultado = true;
+			//test("palo y numero en juego: " + getPalo() + " y " + ultimaCartaMazo().getNumero());
+			//test("palo y numero tirado: " + carta.getPalo() + " y " + carta.getNumero());;
 			if (!(ultimaCartaMazo().getNumero() == carta.getNumero())&&(this.getCartaEspecial2()) != 0) { //verifica carta especial 2
 				resultado = false;
 			}			
@@ -116,6 +119,7 @@ public class Juego extends ObservableRemoto implements IJuego,Serializable{
 				cartaAuxiliar = null;
 			}
 			else {
+		    	this.setPalo(cartaAuxiliar.getPalo());
 				this.getJugadorRequerido().tirarCarta(indice - 1);
 				this.mazoAbajo.agregarCarta(cartaAuxiliar);
 				CartaFuncion.funcionamientoCartas(cartaAuxiliar.getNumero(), this, cartaAuxiliar);				
@@ -138,16 +142,14 @@ public class Juego extends ObservableRemoto implements IJuego,Serializable{
 						    return EstadoJuego.MOSTRAR_OPCIONES_USUARIO;
 					       }
 				    	   this.cartaEnJuego = carta;
-				    	   this.setPalo(carta.getPalo());
 				    	   this.notificarObservadores(Eventos.CARTA_TIRADA);
+				    	   estadoJuegoActualopciones = EstadoJuego.OPCION_SELECCIONADA;	
 					       if (carta.getNumero() == 7 || carta.getNumero()== 11) {
 								opcionb = true; opcionc = false; opciond = true;
 							}
 					       if (carta.getNumero() == 10) {
-								opcionb = false; opcionc = false; opciond = false; opcionf = true;
 								return EstadoJuego.CAMBIO_PALO;
 							}
-				    	   estadoJuegoActualopciones = EstadoJuego.OPCION_SELECCIONADA;	
 					       return EstadoJuego.MOSTRAR_OPCIONES_USUARIO;
 				       }
 				       
@@ -159,7 +161,7 @@ public class Juego extends ObservableRemoto implements IJuego,Serializable{
 		case OPCION_C:	opcionc = false;
 						opciond = true;
 
-						if (this.cartaEnJuego.getNumero() == 0 && this.cartaEnJuego.getJodete0()) {
+						if (this.cartaEnJuego.getNumero() == 0 && this.cartaEnJuego.getJodete0()) { //algo no funciona con el 0
 							levantarPorJodete(this.getJugadorRequerido());
 						}						
 						else if(!this.robarCarta(true, getJugadorRequerido())) {
@@ -236,7 +238,7 @@ public class Juego extends ObservableRemoto implements IJuego,Serializable{
 	}
 
 	public void cartaComodin10(String p) throws RemoteException { // logica de la carta numero 10
-		this.setPaloStr(p); //modificar???????????
+		this.setPaloStr(p); 
 		this.notificarObservadores(Eventos.CAMBIO_COLOR);		
 	}
 
@@ -264,8 +266,10 @@ public class Juego extends ObservableRemoto implements IJuego,Serializable{
 
 	public void pasarJugador() throws RemoteException {
 	if (this.terminaRonda()) {
+		//algo no anda
 		this.calcularPuntosJugadores();
 		this.eleminarJugagores();
+		this.terminarJuego();
 		this.cambioJugadorInicial();
 		primeraCarta();
 	}
@@ -286,6 +290,7 @@ public class Juego extends ObservableRemoto implements IJuego,Serializable{
 		}			
 		
 		if (resultado){			
+			
 			this.mazoAbajo.obtenerUltimaCarta().setJodete0(false);
 			jugador.sumarCarta(this.mazoArriba.getMazo().get(0));
 			this.mazoArriba.eliminarCarta(0);	
@@ -349,7 +354,6 @@ public class Juego extends ObservableRemoto implements IJuego,Serializable{
 				getJugadorRequerido().setJodete(false);	
 			}
 			else {
-				test("numero: " + getJugadorRequerido().getCantidadCartas());
 				levantarPorJodete(getJugadorRequerido());
 				this.notificarObservadores(Eventos.JODETE_LEVENTAS_MAL_CANTADO);
 			}
@@ -516,17 +520,25 @@ public class Juego extends ObservableRemoto implements IJuego,Serializable{
 			if (i != this.getJugadorActual()) {
 				jugador.SumarPuntos(x);
 			}	
-			if (jugador.getPuntos() >= 100){
+			if (jugador.getPuntos() >= puntosPerdedor){
 				jugador.setPerdio(true);
 			}
 		}
 	}
-	private void eleminarJugagores() {
+	private void eleminarJugagores() throws RemoteException {
 		for (Integer i = 0; i < this.getNumeroJugadores(); i++) {
 			Jugador jugador = this.jugadores.get(i);
 			if (jugador.getPerdio()) {
-				this.jugadores.remove(jugador);
+				this.jugadores.remove(i);
+				this.setNumeroJugadores(this.getNumeroJugadores() - 1);
+				i = 99;
 			}
 		}
+	}
+	private void terminarJuego() throws RemoteException {
+		if (this.getNumeroJugadores() == 1) {
+			this.notificarObservadores(Eventos.JUEGO_TERMINADO);
+		}
+		
 	}
 }

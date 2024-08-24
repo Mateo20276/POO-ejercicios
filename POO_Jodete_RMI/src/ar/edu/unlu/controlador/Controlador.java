@@ -2,10 +2,8 @@ package ar.edu.unlu.controlador;
 
 import java.rmi.RemoteException;
 
-import ar.edu.unlu.baraja.ICarta;
 import ar.edu.unlu.baraja.Palo;
 import ar.edu.unlu.juego.*;
-import ar.edu.unlu.observer.*;
 import ar.edu.unlu.rmimvc.cliente.IControladorRemoto;
 import ar.edu.unlu.rmimvc.observer.IObservableRemoto;
 import ar.edu.unlu.vista.EstadoJuego;
@@ -113,13 +111,15 @@ public class Controlador implements IControladorRemoto {
 			case CARTA_TIRADA:
 				this.vista.mostrarCartaTirada(this.modelo.getCartaEnJuegoNumero(), this.modelo.getCartaEnJuegoPalo());
 				break;
-			case CAMBIO_COLOR:
-				
+			case CAMBIO_COLOR:				
 				this.vista.mostrarCambioColor(palo);
 				break;				
 			case CANTIDAD_JUGADORES_ERRONEA:
 				this.vista.mostrarCantidadJugadoresErronea();
-			case CARTA_ESPECIAL_COMODIN:
+				break;
+			case JUEGO_TERMINADO:
+				this.vista.serializar(ultimojugador);
+				this.vista.mostrarFinJuego(ultimojugador);
 				break;
 			case TEST:
 				String algo = this.modelo.getalgo();
@@ -144,8 +144,13 @@ public class Controlador implements IControladorRemoto {
 		return this.modelo.mostrarCartaMazoAbajo();
 	}
 
-	public void cargarNombreJugadores(String nombre) throws RemoteException {
-		this.modelo.cargarNombreJugadores(nombre);
+	public void cargarNombreJugadores(String nombre) throws RemoteException {		
+		try {
+			this.modelo.cargarNombreJugadores(nombre);
+		} catch (RemoteException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	public <T extends IObservableRemoto> void setModeloRemoto(T arg0) throws RemoteException {

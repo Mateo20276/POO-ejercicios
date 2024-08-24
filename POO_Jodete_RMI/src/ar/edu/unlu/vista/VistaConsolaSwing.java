@@ -6,9 +6,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 
-import ar.edu.unlu.baraja.ICarta;
 import ar.edu.unlu.baraja.Palo;
 import ar.edu.unlu.controlador.Controlador;
+import ar.edu.unlu.serializacion.*;
 
 import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JScrollPane;
@@ -19,9 +19,6 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class VistaConsolaSwing implements IVista {
@@ -31,9 +28,10 @@ public class VistaConsolaSwing implements IVista {
 	private final JButton btnBoton = new JButton("Aceptar");
 	private JTextArea textVista;
 	private Controlador controlador;
-	private Estados estadoActual = Estados.JUEGO_CARGAR_NOMBRE_JUGADORES;
+	private Estados estadoActual = Estados.JUEGO_OPCION_1_2;
 	private EstadoJuego estadoJuegoActual = EstadoJuego.MOSTRAR_OPCIONES_USUARIO;
 	private String cartaTirar = "";
+	private static Serializador serializador=new Serializador("src/datos.dat");
 
 	public void println(String texto) {
 		textVista.append(texto + "\n");	
@@ -51,75 +49,9 @@ public class VistaConsolaSwing implements IVista {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 823, 615);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(31dlu;default):grow"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				FormSpecs.DEFAULT_COLSPEC,
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(12dlu;default)"),
-				FormSpecs.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(52dlu;default):grow"),},
-			new RowSpec[] {
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				FormSpecs.DEFAULT_ROWSPEC,
-				FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(38dlu;default)"),FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(45dlu;default)"),FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(43dlu;default)"),FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(76dlu;default)"),FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(20dlu;default):grow"),}));
+		frame.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {FormSpecs.RELATED_GAP_COLSPEC,ColumnSpec.decode("max(31dlu;default):grow"),FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,FormSpecs.DEFAULT_COLSPEC,FormSpecs.RELATED_GAP_COLSPEC,ColumnSpec.decode("max(12dlu;default)"),FormSpecs.RELATED_GAP_COLSPEC,ColumnSpec.decode("max(52dlu;default):grow"),},
+		
+		new RowSpec[] {FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,FormSpecs.DEFAULT_ROWSPEC,FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(38dlu;default)"),FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(45dlu;default)"),FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(43dlu;default)"),FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(76dlu;default)"),FormSpecs.RELATED_GAP_ROWSPEC,RowSpec.decode("max(20dlu;default):grow"),}));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		frame.getContentPane().add(scrollPane, "2, 1, 41, 36, fill, fill");
@@ -131,26 +63,37 @@ public class VistaConsolaSwing implements IVista {
 		frame.getContentPane().add(textInput, "2, 38, 39, 1");
 		textInput.setColumns(0);
 		jodete();
-		nombreJugador();
+		opciones12();
 		btnBoton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String nom = textInput.getText();
 				if (estadoActual == Estados.JUEGO_CARGAR_NOMBRE_JUGADORES) {// el juego carga a los jugadores con su nombre y comienza el juego
+					controlador.setJugador(nom);
 					try {
-						String nom = textInput.getText();
-						controlador.setJugador(nom);
 						controlador.cargarNombreJugadores(nom);
 					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
 						e1.printStackTrace();
+					}					
+				}
+				if (estadoActual == Estados.JUEGO_OPCION_1_2) {
+					if (nom == "1") {
+						nombreJugador();
+						estadoActual = Estados.JUEGO_CARGAR_NOMBRE_JUGADORES;
 					}
-					textInput.setText("");
-				}	
-				try {					
+					if (nom == "2") {
+						mostrarRanking();
+						opciones12();
+					}					
+				}				
+				try {
 					mostrarJuegoInterfaz();
 				} catch (NumberFormatException | RemoteException e1) {
 					e1.printStackTrace();
 				}
-
+				textInput.setText("");
 			}
+
 		});		
 		frame.getContentPane().add(btnBoton, "42, 38");
 		frame.setVisible(true);
@@ -186,6 +129,9 @@ public class VistaConsolaSwing implements IVista {
 				this.controlador.mostrarOpcionesUsuarioJugando();				
 			}
 		}
+		if (estadoActual == Estados.FIN_JUEGO) {
+			println("ya esta");
+		}
 	}
 	
 	public void mostrarOpcionesUsuario(boolean opcionb, boolean opcionc, boolean opciond, boolean opcionf) {
@@ -209,8 +155,7 @@ public class VistaConsolaSwing implements IVista {
 		case "g":return EstadoJuego.OPCION_G;
 		}
 		if(opcion.equals("")) {return EstadoJuego.OPCION_INVALIDA;}
-		return null;
-		
+		return null;		
 	}
 		
 	private void comenzarJuego() throws RemoteException {
@@ -261,7 +206,7 @@ public class VistaConsolaSwing implements IVista {
 		
 	public void mostrarEsperandoJugadores() {
 		println("");
-		println("Esperando Jugadores");		
+		println("Esperando Jugadores...");		
 	}
 	
 	public void mostrarCartaInexistente() {
@@ -278,6 +223,12 @@ public class VistaConsolaSwing implements IVista {
 		println("");
 		println("Comenzar juego (S/N)?");
 		estadoActual = Estados.LISTOS_PARA_COMENZAR;			
+	}
+	
+	public void mostrarRanking() {
+		Ganadores lista=(Ganadores) serializador.readFirstObject();
+		println("Ganadores : " + lista.getNombresGanadores());
+		println("Puntos : " + lista.getCantGanadas());
 	}
 
 	public void mostrarCantidadJugadores(int cantidad) {
@@ -350,6 +301,7 @@ public class VistaConsolaSwing implements IVista {
 	public void mostrarCambioColor(Palo palo) {
 		println("");
 		println("El palo a sido cambiado a: " + palo);		
+		estadoJuegoActual = EstadoJuego.MOSTRAR_OPCIONES_USUARIO;
 	}
 
 	public void mostrarCantidadJugadoresErronea() {
@@ -368,6 +320,13 @@ public class VistaConsolaSwing implements IVista {
 		println("test: " +algo);
 	}
 	
+	public void mostrarFinJuego(String ultimojugador) {
+		println();
+		println("El juego ha finalizado, el ganador es: " + ultimojugador );
+		estadoJuegoActual = EstadoJuego.FIN_JUEGO;
+		estadoActual = Estados.FIN_JUEGO;
+	}
+	
 	public void mostrarCantoJodete(Integer canto) {
 		println();
 		switch((Integer)canto) {
@@ -378,5 +337,21 @@ public class VistaConsolaSwing implements IVista {
 		case 3: println("El jugador anteror no canto jodete, levanta 5 cartas");
 			break;
 		} 
+	}
+	
+	public void serializar(String ganador) {
+		if (serializador!=null) {
+		Ganadores lista=(Ganadores) serializador.readFirstObject();
+		lista.agregarGanador(ganador);
+		serializador.writeOneObject(lista);
+		serializador=null;}
+	}	
+	
+	private void opciones12() {
+		println();
+		println("Seleccione una opcion");
+		println("1) Cargar jugador");
+		println("2) Ver ranking");
+		
 	}
 }

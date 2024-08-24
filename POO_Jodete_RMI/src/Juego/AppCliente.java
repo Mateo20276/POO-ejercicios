@@ -20,8 +20,8 @@ public class AppCliente {
 		Controlador controlador2 = new Controlador(vista2);
 		//Controlador controlador3 = new Controlador(vista3);
 		//Controlador controlador4 = new Controlador(vista4);
-		Cliente cliente1 = new Cliente("127.0.0.1", 11121, "127.0.0.1", 9122);// muestra la vista gráfica
-		Cliente cliente2 = new Cliente("127.0.0.1", 11122, "127.0.0.1", 9122);// muestra la vista gráfica
+		Cliente cliente1 = new Cliente("127.0.0.1", 11121, "127.0.0.1", 9163);// muestra la vista gráfica
+		Cliente cliente2 = new Cliente("127.0.0.1", 11122, "127.0.0.1", 9163);// muestra la vista gráfica
 		//Cliente cliente3 = new Cliente("127.0.0.1", 11123, "127.0.0.1", 9084);
 		//Cliente cliente4 = new Cliente("127.0.0.1", 11124, "127.0.0.1", 9011);// muestra la vista gráfica
 		try {

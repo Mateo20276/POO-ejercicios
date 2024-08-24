@@ -34,5 +34,7 @@ public interface IVista {
 	public void mostrarCartaTirada(Integer numero, String palo);
 	public void mostrarCantoJodete(Integer i);
 	public void mostrarJodete0();
+	public void serializar(String jugador);
+	public void mostrarFinJuego(String ultimojugador);
 
 }
