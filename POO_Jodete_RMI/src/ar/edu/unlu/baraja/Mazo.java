@@ -12,16 +12,19 @@ public class Mazo implements Cloneable, Serializable {
 	}
 	
 	private void generarMazo() {
-		for (Palo palo: Palo.values()) {
-			for (int j = 1; j < 13; j++) {
-				
-				this.agregarCarta(new Carta(j,palo));				
-			}
-		}
-		this.agregarCarta(new Carta(0,null));
-		this.agregarCarta(new Carta(0,null));
+	    Palo[] palos = Palo.values();
+	    
+	    for (int i = 0; i < 4; i++) {
+	        Palo palo = palos[i];
+	        for (int j = 1; j < 13; j++) {
+	            this.agregarCarta(new Carta(j, palo));
+	        }
+	    }
+	    
+	    this.agregarCarta(new Carta(0, Palo.COMODIN1));
+	    this.agregarCarta(new Carta(0, Palo.COMODIN2));
+	    }
 
-	}
 	
 	private void mezclar() {
 		Carta carta= null;

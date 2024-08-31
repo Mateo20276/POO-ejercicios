@@ -1,6 +1,7 @@
 package ar.edu.unlu.controlador;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import ar.edu.unlu.baraja.Palo;
 import ar.edu.unlu.juego.*;
@@ -29,11 +30,11 @@ public class Controlador implements IControladorRemoto {
 			switch((Eventos) evento) {
 			case CARTAS:
 				if (!getJugador().equals("")) {
-					String cartas = this.modelo.mostrarManoJugador(getJugador());
+					ArrayList<String> cartas = this.modelo.mostrarManoJugadorArray(getJugador());
 					this.vista.verCartas(cartas);
 				}
 				String cartas = this.modelo.mostrarCartaMazoAbajo();
-				this.vista.verCartaMazoAbajo(cartas, palo);
+				this.vista.verCartaMazoAbajo(cartas);
 				break;
 			case CARTA_INEXISTENTE:
 				this.vista.mostrarCartaInexistente();
@@ -52,9 +53,6 @@ public class Controlador implements IControladorRemoto {
 				if (!getJugador().equals("")) {				
 					this.vista.mostrarEsperandoJugadores();
 					}
-				else {
-					this.vista.nombreJugador();
-				}
 				break;	
 			case JODETE_LEVANTAS_0_CANTADO:	
 				this.vista.mostrarJodete0();
@@ -64,9 +62,6 @@ public class Controlador implements IControladorRemoto {
 				if (!getJugador().equals("")) {				
 					this.vista.mostrarListosParaComenzar();
 					}
-				else {
-					this.vista.nombreJugador();
-				}
 				break;				
 			case SELECCIONAR_CARTA_A_TIRAR:
 				if (jugadoractual.equals(getJugador())) {
@@ -90,6 +85,11 @@ public class Controlador implements IControladorRemoto {
 					this.vista.obetnerOpcionElegida(opc);
 				}			
 				break;
+			case JUGADOR_ELIMINADO:
+				this.vista.mostrarJugadorEliminado(this.modelo.ultimoJugadorEliminado());
+				if (this.getJugadorEliminado(getJugador())) {
+					this.vista.mostrarJugadorEliminadoPropio();
+				}
 			case CANTO_JODETE:
 				this.vista.mostrarCantoJodete(1);
 				break;
@@ -127,7 +127,6 @@ public class Controlador implements IControladorRemoto {
 				break;
 			default:
 				break;
-
 			}
 		}	
 	}
@@ -140,6 +139,15 @@ public class Controlador implements IControladorRemoto {
 		this.jugador = jugador;
 	}
 
+	public boolean getJugadorEliminado(String jugador) {
+		try {
+			return this.modelo.getJugadorEliminado(jugador);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
 	public String verCartaMazoAbajo() throws RemoteException {
 		return this.modelo.mostrarCartaMazoAbajo();
 	}

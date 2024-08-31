@@ -1,8 +1,12 @@
 package ar.edu.unlu.baraja;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Carta implements ICarta, Serializable{
+
+	private static final long serialVersionUID = 1L;
+
 	private int numero;//comodines (numero y palo = 0)
 	
 	private Palo palo;// (palo 1 = espada), (palo 2 = basto), (palo 3 = oro), (palo 4 = copa).
@@ -20,9 +24,8 @@ public class Carta implements ICarta, Serializable{
 }
 
 	public String toString() {
-		return "Carta [numero=" + numero + ", palo=" + palo + "]";
+		return numero + "," + palo;
 	}
-
 
 	public int getNumero() {
 		return numero;

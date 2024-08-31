@@ -5,4 +5,8 @@ public enum Palo {
 	ESPADA,
 	ORO,
 	COPA,
+	COMODIN1,
+	COMODIN2, 
+	NULL
+	
 }

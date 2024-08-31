@@ -37,8 +37,7 @@ public class CartaFuncion {
 				else {carta.setCambioJugador(true);}
 				juego.notificarObservadores(Eventos.CARTA_ESPECIAL_12);
 				
-				break;
-				
+				break;				
 			case 0:
 				juego.notificarObservadores(Eventos.CARTA_ESPECIAL_COMODIN);
 				break;

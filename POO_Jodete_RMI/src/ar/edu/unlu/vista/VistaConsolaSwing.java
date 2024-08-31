@@ -19,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class VistaConsolaSwing implements IVista {
@@ -67,21 +68,22 @@ public class VistaConsolaSwing implements IVista {
 		btnBoton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String nom = textInput.getText();
+				
 				if (estadoActual == Estados.JUEGO_CARGAR_NOMBRE_JUGADORES) {// el juego carga a los jugadores con su nombre y comienza el juego
 					controlador.setJugador(nom);
 					try {
 						controlador.cargarNombreJugadores(nom);
 					} catch (RemoteException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}					
 				}
 				if (estadoActual == Estados.JUEGO_OPCION_1_2) {
-					if (nom == "1") {
+					if (nom.equals("1")) {
 						nombreJugador();
 						estadoActual = Estados.JUEGO_CARGAR_NOMBRE_JUGADORES;
 					}
-					if (nom == "2") {
+					if (nom.equals("2")) {
+						println(nom);
 						mostrarRanking();
 						opciones12();
 					}					
@@ -194,78 +196,64 @@ public class VistaConsolaSwing implements IVista {
 		println("Seleccione carta a tirar");
 	}
 	
-	public void verCartaMazoAbajo(String carta, Palo palo) {
-		println("");
-		println("Carta boca arriba: " + carta + " (Palo en juego: " + palo + ")");
+	public void verCartaMazoAbajo(String carta) {
+	//modificar esto
 	}
 
-	public void verCartas(String cartas){
-		println("");
-		println(cartas);
-	}
-		
+	public void verCartas(ArrayList<String> cartas){
+    //modificar esto
+	}		
 	public void mostrarEsperandoJugadores() {
 		println("");
 		println("Esperando Jugadores...");		
-	}
-	
+	}	
 	public void mostrarCartaInexistente() {
 		println("");
 		println("Carta Inexistente");		
 	}
-
 	public void mostrarCartaNoCoincidente() {
 		println("");
 		println("Carta con numero o palo no valido");		
-	}
-	
+	}	
 	public void mostrarListosParaComenzar() {
 		println("");
 		println("Comenzar juego (S/N)?");
 		estadoActual = Estados.LISTOS_PARA_COMENZAR;			
-	}
-	
+	}	
 	public void mostrarRanking() {
 		Ganadores lista=(Ganadores) serializador.readFirstObject();
 		println("Ganadores : " + lista.getNombresGanadores());
 		println("Puntos : " + lista.getCantGanadas());
 	}
-
 	public void mostrarCantidadJugadores(int cantidad) {
 		println("");
 		println("Los jugadores han sido agregados");
 		println("");
 		println("Cantidad jugadores: " + cantidad);	
 	}
-
 	public void mostrarComienzoJuego() {
 		println("");
 		println("El juego ha comenzado");	
 		estadoActual = Estados.COMIENZO_JUEGO;
 	}
-
 	public void mostrarFinTurno() {
 		println("");
 		println("Fin de turno");	
 	}
-
 	public void mostrarCambioJugador(String nombre) {	
 		println("");
 		println("Turno del jugador " + nombre);		
 	}
-
 	public void mostrarNoSePuedeRobarCartas() {
 		println("");
 		println("Mazo vacio, no se pudieron robar cartas");
 	}
-
 	public void mostrarCambioRonda() {
 		println("");
 		println("El jugador se ha quedado sin cartas");
 		println("");
 		println("Una nueva ronda ha comenzado");
 	}
-
 	public void mostrarCartaTiradaCorrectamente() {
 		println("");
 		println("Carta tirada correctamente");					
@@ -293,7 +281,6 @@ public class VistaConsolaSwing implements IVista {
 				break;
 			}
 	}
-
 	public void mostrarJodete0() {
 		println();
 		println("El siguiente jugador levanta 5 cartas");
@@ -303,30 +290,25 @@ public class VistaConsolaSwing implements IVista {
 		println("El palo a sido cambiado a: " + palo);		
 		estadoJuegoActual = EstadoJuego.MOSTRAR_OPCIONES_USUARIO;
 	}
-
 	public void mostrarCantidadJugadoresErronea() {
 		println("");
 		println("Cantidad de jugadores erronea");	
-	}	
-	
+	}		
 	public void mostrarJugadorAgregado(String nombre, Integer cantidad) {
 		println("");
 		println("El jugador " + nombre + " fue agregado");	
 		println("Cantidad jugadores: " + cantidad);	
-	}
-	
+	}	
 	public void mostrarTest(String algo) {
 		println();
 		println("test: " +algo);
-	}
-	
+	}	
 	public void mostrarFinJuego(String ultimojugador) {
 		println();
 		println("El juego ha finalizado, el ganador es: " + ultimojugador );
 		estadoJuegoActual = EstadoJuego.FIN_JUEGO;
 		estadoActual = Estados.FIN_JUEGO;
-	}
-	
+	}	
 	public void mostrarCantoJodete(Integer canto) {
 		println();
 		switch((Integer)canto) {
@@ -337,16 +319,14 @@ public class VistaConsolaSwing implements IVista {
 		case 3: println("El jugador anteror no canto jodete, levanta 5 cartas");
 			break;
 		} 
-	}
-	
+	}	
 	public void serializar(String ganador) {
 		if (serializador!=null) {
 		Ganadores lista=(Ganadores) serializador.readFirstObject();
 		lista.agregarGanador(ganador);
 		serializador.writeOneObject(lista);
 		serializador=null;}
-	}	
-	
+	}		
 	private void opciones12() {
 		println();
 		println("Seleccione una opcion");
@@ -354,4 +334,13 @@ public class VistaConsolaSwing implements IVista {
 		println("2) Ver ranking");
 		
 	}
+	public void mostrarJugadorEliminado(String jugador) {
+		println();
+		println("El jugador " + jugador + " fue eliminado");
+	}
+	public void mostrarJugadorEliminadoPropio() {
+		println();
+		println("Fuiste eliminado");
+	}
+
 }

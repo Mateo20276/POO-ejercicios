@@ -2,6 +2,7 @@ package ar.edu.unlu.juego;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import ar.edu.unlu.baraja.ICarta;
 import ar.edu.unlu.baraja.Mazo;
@@ -48,5 +49,8 @@ public interface IJuego extends IObservableRemoto, Serializable{
 	String getalgo() throws RemoteException;
 	void setOp(String string)throws RemoteException;
 	Palo getPalo()throws RemoteException;
+	boolean getJugadorEliminado(String jugador) throws RemoteException;
+	String ultimoJugadorEliminado() throws RemoteException;
+	ArrayList<String> mostrarManoJugadorArray(String jugador) throws RemoteException;
 
 }
