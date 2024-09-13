@@ -31,12 +31,17 @@ public interface IVista {
 	public void seleecionCartaTirar() throws NumberFormatException, RemoteException;
 	public void mostrarJugadorAgregado(String nombre, Integer cantidad);
 	public void mostrarTest(String algo);
-	public void mostrarCartaTirada(Integer numero, String palo);
+	public void mostrarCartaTirada(Integer numero, String palo, Integer extra);
 	public void mostrarCantoJodete(Integer i);
 	public void mostrarJodete0();
 	public void serializar(String jugador);
 	public void mostrarFinJuego(String ultimojugador);
 	public void mostrarJugadorEliminado(String jugador);
 	public void mostrarJugadorEliminadoPropio();
-
+	public void mostrarPaloEnJuego(String palo);
+	public void bloquearBoton();
+	public void mostrarPalosACambiar();
+	public void setOpcionSeleccionada();
+	public void mostrarNoCantoJodetePrimero();
+	public void mostrarPuntosJugadores(String puntosJugadores);
 }

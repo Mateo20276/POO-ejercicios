@@ -39,6 +39,7 @@ public class Jugador implements Serializable {
 	public boolean jodete() {
 		return (this.mano.size() == 1);
 	}
+
 	
 	public boolean cantidadCartasCero() {
 		return (this.getCantidadCartas() == 0);
@@ -62,7 +63,7 @@ public class Jugador implements Serializable {
 			if ((numero == 10) || (numero == 0)){
 				setPuntos(25 * x + getPuntos());
 			}
-			else {setPuntos(numero * x + getPuntos());}
+			else {setPuntos(x + getPuntos());}
 		}
 	}
 

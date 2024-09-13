@@ -7,6 +7,7 @@ import java.rmi.RemoteException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 class VistaGraficaCambioPaloSwing extends JFrame {
     private JComboBox<String> comboBox;
@@ -31,12 +32,16 @@ class VistaGraficaCambioPaloSwing extends JFrame {
         btnElegir.setBounds(150, 20, 100, 30);
         getContentPane().add(btnElegir);
 
-        // Acción del botón "Elegir"
         btnElegir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 paloSeleccionado = (String) comboBox.getSelectedItem();
-                setVisible(false); // Oculta la ventana
-                dispose(); // Cierra la ventana
+
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        setVisible(false); 
+                        dispose(); 
+                    }
+                });
             }
         });
     }

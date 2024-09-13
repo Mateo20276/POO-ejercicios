@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+import ar.edu.unlu.baraja.Carta;
 import ar.edu.unlu.baraja.ICarta;
 import ar.edu.unlu.baraja.Mazo;
 import ar.edu.unlu.baraja.Palo;
@@ -13,7 +14,6 @@ import ar.edu.unlu.vista.EstadoJuego;
 
 public interface IJuego extends IObservableRemoto, Serializable{
 
-	boolean cantidadJugadores(Integer cant) throws RemoteException;
 	ICarta tirarCarta(Integer indice) throws RemoteException;
 	boolean terminaRonda() throws RemoteException;
 	void cambioJugadorInicial() throws RemoteException;
@@ -52,5 +52,15 @@ public interface IJuego extends IObservableRemoto, Serializable{
 	boolean getJugadorEliminado(String jugador) throws RemoteException;
 	String ultimoJugadorEliminado() throws RemoteException;
 	ArrayList<String> mostrarManoJugadorArray(String jugador) throws RemoteException;
+	void setOpcionb(boolean b) throws RemoteException;
+	void setOpcionc(boolean c) throws RemoteException;
+	void setOpciond(boolean d) throws RemoteException;
+	void setOpcionf(boolean f) throws RemoteException;
+	Integer getCartasALevantar()throws RemoteException;
+	void setCartasALevantar(Integer i)throws RemoteException;
+	void notificarCartas() throws RemoteException;
+	String getPuntosJugadores() throws RemoteException;
+	void notificarCartaTirada() throws RemoteException;
+	void setCartaEnJuego(ICarta carta) throws RemoteException;
 
 }

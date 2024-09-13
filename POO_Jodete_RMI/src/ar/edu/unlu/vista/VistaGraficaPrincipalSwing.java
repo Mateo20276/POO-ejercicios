@@ -11,6 +11,9 @@ import javax.swing.JLabel;
 
 import ar.edu.unlu.baraja.Palo;
 import ar.edu.unlu.controlador.Controlador;
+import ar.edu.unlu.serializacion.Ganadores;
+import ar.edu.unlu.serializacion.Serializador;
+
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
@@ -46,6 +49,7 @@ public class VistaGraficaPrincipalSwing implements IVista {
     private JScrollPane scrollPaneCartas,scrollPaneCartaArriba;
     private String cartaTirar = "";
 	private JButton btnTirarCarta, btnLevantarCarta, btnTerminarTurno, btnCantarJodete, btnNoCantoJodete, btnCambiarPalo;
+	private static Serializador serializador=new Serializador("src/datos.dat");
 	private JSpinner spinner;
 
 
@@ -81,27 +85,22 @@ public class VistaGraficaPrincipalSwing implements IVista {
 		
 		btnTirarCarta = new JButton("Tirar carta");
 		panel_1.add(btnTirarCarta);
-		btnTirarCarta.setVisible(false);
 		
 		btnLevantarCarta = new JButton("Levantar carta");
 		panel_1.add(btnLevantarCarta);
-		btnLevantarCarta.setVisible(false);
 		
 		btnTerminarTurno = new JButton("Terminar turno");
 		panel_1.add(btnTerminarTurno);
-		btnTerminarTurno.setVisible(false);
 
 		btnCantarJodete = new JButton("Cantar jodete");
 		panel_1.add(btnCantarJodete);
-		btnCantarJodete.setVisible(false);
 		
 		btnNoCantoJodete = new JButton("No canto jodete");
 		panel_1.add(btnNoCantoJodete);
-		btnNoCantoJodete.setVisible(false);
 		
 		btnCambiarPalo = new JButton("Cambiar Palo");
 		panel_1.add(btnCambiarPalo);
-		btnCambiarPalo.setVisible(false);
+		setearBotones(false,false,false,false,false,false);
 		
 		JPanel panel_2 = new JPanel();
 		frame.getContentPane().add(panel_2, BorderLayout.CENTER);
@@ -185,50 +184,12 @@ public class VistaGraficaPrincipalSwing implements IVista {
 		
 		btnCambiarPalo.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		        try {
-		            // Deshabilitar los componentes de la ventana principal
-		            disableComponents(frame.getContentPane(), false);
-
-		            // Crear y mostrar la ventana de cambio de palo
-		            vistaPalo = new VistaGraficaCambioPaloSwing();
-		            vistaPalo.setVisible(true);
-
-		            // Usar un hilo separado para evitar bloquear el EDT
-		            new Thread(new Runnable() {
-		                public void run() {
-		                    while (vistaPalo.isVisible()) {
-		                        try {
-		                            Thread.sleep(10); // Espera no bloqueante
-		                        } catch (InterruptedException e1) {
-		                            e1.printStackTrace();
-		                        }
-		                    }
-
-		                    // Obtener el palo seleccionado y habilitar los componentes
-		                    String paloSeleccionado = vistaPalo.getPaloSeleccionado();
-		                    if (paloSeleccionado != null) {
-		                    	try {
-									cambioPalo(paloSeleccionado);
-									mostrarOpcionesUsuarioJugando();
-								} catch (RemoteException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-		                    }
-
-		                    // Rehabilitar los componentes de la ventana principal
-		                    SwingUtilities.invokeLater(new Runnable() {
-		                        public void run() {
-		                            disableComponents(frame.getContentPane(), true);
-		                            frame.setVisible(true);
-		                        }
-		                    });
-		                }
-		            }).start();
-		            
-		        } catch (RemoteException e1) {
-		            e1.printStackTrace();
-		        }
+		    	try {
+					obetnerOpcionElegida("f");
+				} catch (NumberFormatException | RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 		    }
 		});
 
@@ -250,7 +211,7 @@ public class VistaGraficaPrincipalSwing implements IVista {
 		this.controlador.cartaComodin10(palo);
 	}
 	public void menuPrincipal() {
-		println("");
+		println("\n");
 		println("\nSelecciona una opción:");		
 	}
 	public void setControlador(Controlador controlador) {
@@ -309,57 +270,92 @@ public class VistaGraficaPrincipalSwing implements IVista {
 		// TODO Auto-generated method stub		
 	}
 	public void mostrarCartaNoCoincidente() {
-		println("");
+		println("\n");
 		println("\nCarta con numero o palo no valido");			
 	}
 	public void mostrarCantidadJugadores(int cantidad) {
-		println("");
+		println("\n");
 		println("\nLos jugadores han sido agregados");
-		println("");
+		println("\n");
 		println("\nCantidad jugadores: " + cantidad);	
+	}
+	public void mostrarPalosACambiar() {
+		try {
+            disableComponents(frame.getContentPane(), false);
+
+            vistaPalo = new VistaGraficaCambioPaloSwing();
+            vistaPalo.setVisible(true);
+
+            new Thread(new Runnable() {
+                public void run() {
+                    while (vistaPalo.isVisible()) {
+                        try {
+                            Thread.sleep(10); 
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                    String paloSeleccionado = vistaPalo.getPaloSeleccionado();
+                    if (paloSeleccionado != null) {
+                    	try {
+							cambioPalo(paloSeleccionado);
+							mostrarOpcionesUsuarioJugando();
+						} catch (RemoteException e) {
+							e.printStackTrace();
+						}
+                    }
+
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            disableComponents(frame.getContentPane(), true);
+                            frame.setVisible(true);
+                        }
+                    });
+                }
+            }).start();
+            
+        } catch (RemoteException e1) {
+            e1.printStackTrace();
+        }
 	}
 	public void mostrarComienzoJuego() {	
 		vistaRJ.cambiarVisibilidad();
 		frame.setVisible(true);
 		//disableComponents(frame.getContentPane(), false);
-		println("");
+		println("\n");
 		println("El juego ha comenzado");
-		try {
-			mostrarOpcionesUsuarioJugando();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	}
+	public void bloquearBoton() {
+		setearBotones(false,false,false,false,false,false);
 	}
 	public void mostrarFinTurno() {
-		println("");
+		println("\n");
 		println("\nFin de turno");	
 	}
 	public void mostrarCambioJugador(String nombre) {	
-		println("");
+		println("\n");
 		println("\nTurno del jugador " + nombre);		
 	}
 	public void mostrarNoSePuedeRobarCartas() {
-		println("");
+		println("\n");
 		println("\nMazo vacio, no se pudieron robar cartas");
 	}
 	public void mostrarCambioRonda() {
-		println("");
+		println("\n");
 		println("\nEl jugador se ha quedado sin cartas");
-		println("");
+		println("\n");
 		println("\nUna nueva ronda ha comenzado");
 	}
 	public void mostrarCartaTiradaCorrectamente() {
-		println("");
+		println("\n");
 		println("\nCarta tirada correctamente");					
 	}
 	public void mostrarCambioColor(Palo palo) {
-		println("");
+		println("\n");
 		println("\nEl palo a sido cambiado a: " + palo);		
-		//estadoJuegoActual = EstadoJuego.MOSTRAR_OPCIONES_USUARIO;
 	}
 	public void mostrarCantidadJugadoresErronea() {
-		println("");
+		println("\n");
 		println("\nCantidad de jugadores erronea");	
 	}
 	public void mostrarEsperandoJugadores() {
@@ -368,28 +364,20 @@ public class VistaGraficaPrincipalSwing implements IVista {
 	public void mostrarListosParaComenzar() {
 		this.vistaRJ.mostrarListosParaComenzar();		
 	}
+	public void mostrarNoCantoJodetePrimero() {
+		println("\nNo existe jugador anterior");
+	}
 	public void obetnerOpcionElegida(String op) throws NumberFormatException, RemoteException {
 		EstadoJuego estadoJuego = this.controlador.opcionesDeJuego(estadoJuegoSegunSeleccion(op), this.cartaTirar);	
 		if (estadoJuego == EstadoJuego.MOSTRAR_OPCIONES_USUARIO){
 			mostrarOpcionesUsuarioJugando();
 		}
-		if (estadoJuego == EstadoJuego.CAMBIO_PALO){
-			btnTirarCarta.setVisible(false);
-			btnLevantarCarta.setVisible(false);
-			btnTerminarTurno.setVisible(false);
-			btnCambiarPalo.setVisible(false);
-			btnCantarJodete.setVisible(false);
-			btnNoCantoJodete.setVisible(false);
-			btnCambiarPalo.setVisible(true);
-		}
+	}
+	public void mostrarPuntosJugadores(String putos_jugador) {
+		println(putos_jugador);		
 	}
 	public void mostrarOpcionesUsuario(boolean opcionb, boolean opcionc, boolean opciond, boolean opcionf) {
-		btnTirarCarta.setVisible(opcionb);
-		btnLevantarCarta.setVisible(opcionc);
-		btnTerminarTurno.setVisible(opciond);
-		btnCambiarPalo.setVisible(opcionf);
-		btnCantarJodete.setVisible(true);
-		btnNoCantoJodete.setVisible(true);
+		setearBotones(opcionb, opcionc, opciond, opcionf, true, true);
 	}
 	public void seleecionCartaTirar() throws NumberFormatException, RemoteException {
 		// TODO Auto-generated method stub		
@@ -401,17 +389,25 @@ public class VistaGraficaPrincipalSwing implements IVista {
 		// TODO Auto-generated method stub		
 	}
 	public void mostrarTest(String algo) {
-		println();
+		println("\n");
 		println("test: " +algo);
 	}
-	public void mostrarCartaTirada(Integer numero, String palo) {
-		println("");
+	private void setearBotones(boolean a, boolean b, boolean c, boolean d, boolean e, boolean f) {
+		btnTirarCarta.setVisible(a);
+		btnLevantarCarta.setVisible(b);
+		btnTerminarTurno.setVisible(c);
+		btnCambiarPalo.setVisible(d);
+		btnCantarJodete.setVisible(e);
+		btnNoCantoJodete.setVisible(f);
+	}
+	public void mostrarCartaTirada(Integer numero, String palo, Integer extra) {
+		println("\n");
 		if (numero != 0) {println("\nCarta "+ numero + " de" + palo + " tirada");}
 		else {println("\nCarta comodin tirada, levanta 5 cortas si cantaste jodete");
 			  println("\nSe puede tirar cualquier carta");}
-		println("");
+		println("\n");
 			switch((Integer)numero) {			
-			case 2:println("El jugador levantara cartas extra");
+			case 2:println("\nEl jugador levantara " + extra + " cartas extra");
 				break;
 			case 4:println("\nEl siguiente jugador pierde su turno");
 				break;
@@ -427,7 +423,7 @@ public class VistaGraficaPrincipalSwing implements IVista {
 			}
 	}
 	public void mostrarCantoJodete(Integer canto) {
-		println();
+		println("\n");
 		switch((Integer)canto) {
 		case 1:	println("\nCantaste Jodete");
 			break;
@@ -438,37 +434,35 @@ public class VistaGraficaPrincipalSwing implements IVista {
 		} 
 	}
 	public void mostrarJodete0() {
-		println();
+		println("\n");
 		println("\nEl siguiente jugador levanta 5 cartas");
 	}
-	public void serializar(String jugador) {
-		// TODO Auto-generated method stub		
+	public void serializar(String ganador) {
+		if (serializador!=null) {
+			Ganadores lista=(Ganadores) serializador.readFirstObject();
+			lista.agregarGanador(ganador);
+			serializador.writeOneObject(lista);
+			serializador=null;}		
 	}
 	public void mostrarFinJuego(String ultimojugador) {
-		println();
+		println("\n");
 		println("\nEl juego ha finalizado, el ganador es: " + ultimojugador );
-		//estadoJuegoActual = EstadoJuego.FIN_JUEGO;
-		//estadoActual = Estados.FIN_JUEGO;
 	}
 	public void mostrarJugadorEliminado(String jugador) {
-		println();
+		println("\n");
 		println("\nEl jugador " + jugador + " fue eliminado");
 	}
+	public void mostrarPaloEnJuego(String palo) {
+		println("\n[Palo en juego : " + palo + "]");
+	}
 	public void mostrarJugadorEliminadoPropio() {
-		println();
+		println("\n");
 		println("\nFuiste eliminado");
 	}
 	private ArrayList<String> splitearCarta(String carta){
 		String[] partes = carta.split(",");
         String numero = partes[0];
-        String palo = "";
-        if (partes.length == 1) {
-        	println(carta + " - ");
-        }
-        else {
-            palo = partes[1];
-        }
-
+        String palo = partes[1];
         ArrayList<String> cartaSpliteada = new ArrayList<String>();
         cartaSpliteada.add(numero);
         cartaSpliteada.add(palo);        
@@ -485,5 +479,11 @@ public class VistaGraficaPrincipalSwing implements IVista {
 		}
 		if(opcion.equals("")) {return EstadoJuego.OPCION_INVALIDA;}
 		return null;		
+	}
+
+	@Override
+	public void setOpcionSeleccionada() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -101,15 +101,8 @@ public class VistaConsolaSwing implements IVista {
 		frame.setVisible(true);
 	}
 	
-	public void mostrarJuegoInterfaz() throws NumberFormatException, RemoteException {
-		println("");
-		if (estadoActual == Estados.LISTOS_PARA_COMENZAR) {
-			String comienzo = textInput.getText();
-			textInput.setText("");
-			if (comienzo.equals("si")) {
-				comenzarJuego();
-			}
-		}		
+	private void mostrarJuegoInterfaz() throws NumberFormatException, RemoteException {
+		println("");		
 		if (estadoActual == Estados.COMIENZO_JUEGO) { //inicia el juego
 			if (estadoJuegoActual == EstadoJuego.CAMBIO_PALO) {
 				String palo = textInput.getText();
@@ -131,6 +124,13 @@ public class VistaConsolaSwing implements IVista {
 				this.controlador.mostrarOpcionesUsuarioJugando();				
 			}
 		}
+		if (estadoActual == Estados.LISTOS_PARA_COMENZAR) {
+			String comienzo = textInput.getText();
+			textInput.setText("");
+			if (comienzo.equals("si")) {
+				comenzarJuego();
+			}
+		}
 		if (estadoActual == Estados.FIN_JUEGO) {
 			println("ya esta");
 		}
@@ -144,6 +144,9 @@ public class VistaConsolaSwing implements IVista {
 		println("e - Cantar jodete");
 		if (opcionf) {println("f - Cambiar de palo");}
 		println("g - No canto jodete el jugador anterior");
+		this.btnBoton.setVisible(true);		
+	}
+	public void setOpcionSeleccionada() {
 		estadoJuegoActual = EstadoJuego.OPCION_SELECCIONADA;
 	}
 
@@ -161,7 +164,11 @@ public class VistaConsolaSwing implements IVista {
 	}
 		
 	private void comenzarJuego() throws RemoteException {
-		this.controlador.comenzarJuego();		
+		this.controlador.comenzarJuego();	
+	}
+	
+	public void bloquearBoton() {
+		this.btnBoton.setVisible(false);
 	}
 	
 	public void obetnerOpcionElegida(String op) throws NumberFormatException, RemoteException {
@@ -197,12 +204,23 @@ public class VistaConsolaSwing implements IVista {
 	}
 	
 	public void verCartaMazoAbajo(String carta) {
-	//modificar esto
+		println("");
+		println("Carta boca arriba: " + carta);
 	}
 
-	public void verCartas(ArrayList<String> cartas){
-    //modificar esto
-	}		
+	public void verCartas(ArrayList<String> cartas) {
+		println();
+	    for (int i = 0; i < cartas.size(); i++) {
+	        String[] partes = cartas.get(i).split(",");
+	        String numero = partes[0].trim(); 
+	        String palo = partes[1].trim();   
+	        println((i + 1) + ") numero: " + numero + " - palo: " + palo);
+	    }
+	}	
+	public void mostrarPaloEnJuego(String palo) {
+		println(" [Palo en juego : " + palo + "]");
+	}
+	
 	public void mostrarEsperandoJugadores() {
 		println("");
 		println("Esperando Jugadores...");		
@@ -218,12 +236,12 @@ public class VistaConsolaSwing implements IVista {
 	public void mostrarListosParaComenzar() {
 		println("");
 		println("Comenzar juego (S/N)?");
-		estadoActual = Estados.LISTOS_PARA_COMENZAR;			
+		estadoActual = Estados.LISTOS_PARA_COMENZAR;	
 	}	
 	public void mostrarRanking() {
 		Ganadores lista=(Ganadores) serializador.readFirstObject();
 		println("Ganadores : " + lista.getNombresGanadores());
-		println("Puntos : " + lista.getCantGanadas());
+		println("Veces ganadas : " + lista.getCantGanadas());
 	}
 	public void mostrarCantidadJugadores(int cantidad) {
 		println("");
@@ -234,11 +252,19 @@ public class VistaConsolaSwing implements IVista {
 	public void mostrarComienzoJuego() {
 		println("");
 		println("El juego ha comenzado");	
-		estadoActual = Estados.COMIENZO_JUEGO;
+		btnBoton.setVisible(false);
+		estadoActual = Estados.COMIENZO_JUEGO;		
+	}
+	public void mostrarNoCantoJodetePrimero() {
+		println("");
+		println("No existe jugador anterior");
 	}
 	public void mostrarFinTurno() {
 		println("");
 		println("Fin de turno");	
+	}
+	public void mostrarPalosACambiar() {
+		println("Escribe el palo a cambia: oro, basto, espada, copa");
 	}
 	public void mostrarCambioJugador(String nombre) {	
 		println("");
@@ -258,7 +284,7 @@ public class VistaConsolaSwing implements IVista {
 		println("");
 		println("Carta tirada correctamente");					
 	}
-	public void mostrarCartaTirada(Integer numero, String palo) {
+	public void mostrarCartaTirada(Integer numero, String palo, Integer extra) {
 		println("");
 		if (numero != 0) {println("Carta "+ numero + " de" + palo + " tirada");}
 		else {println("Carta comodin tirada, levanta 5 cortas si cantaste jodete");
@@ -266,14 +292,13 @@ public class VistaConsolaSwing implements IVista {
 		println("");
 			switch((Integer)numero) {
 			
-			case 2:println("El jugador levantara cartas extra");
+			case 2:println("\nEl jugador levantara " + extra + " cartas extra");
 				break;
 			case 4:println("El siguiente jugador pierde su turno");
 				break;
 			case 7:println("Puedes tirar otra carta");	
 				break;
-			case 10:println("Cambio de palo, seleccione palo a cambia:");
-					println("oro, basto, copa, espada");
+			case 10:println("Cambio de palo");
 				break;
 			case 11:println("Puedes tirar otra carta");
 				break;
@@ -342,5 +367,7 @@ public class VistaConsolaSwing implements IVista {
 		println();
 		println("Fuiste eliminado");
 	}
-
+	public void mostrarPuntosJugadores(String puntos_jugador) {
+		println(puntos_jugador);		
+	}
 }

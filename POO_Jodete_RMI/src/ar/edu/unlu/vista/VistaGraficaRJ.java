@@ -118,7 +118,7 @@ public class VistaGraficaRJ extends JFrame  {
 	private void mostrarRanking() {
 		Ganadores lista=(Ganadores) serializador.readFirstObject();
 		println("Ganadores : " + lista.getNombresGanadores() + "\n");
-		println("Puntos : " + lista.getCantGanadas() + "\n");		
+		println("Veces ganadas : " + lista.getCantGanadas() + "\n");		
 	}
 	
 	public void setControlador(Controlador controlador) {

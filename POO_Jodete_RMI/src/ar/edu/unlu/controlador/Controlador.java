@@ -35,13 +35,19 @@ public class Controlador implements IControladorRemoto {
 				}
 				String cartas = this.modelo.mostrarCartaMazoAbajo();
 				this.vista.verCartaMazoAbajo(cartas);
+				this.vista.mostrarPaloEnJuego("" + this.modelo.getPalo());
 				break;
 			case CARTA_INEXISTENTE:
 				this.vista.mostrarCartaInexistente();
 				break;			
 			case JUGADOR_INICIAL:
 				this.vista.mostrarCambioJugador(jugadoractual);			
-				break;				
+				break;	
+			case PRIMER_JUGADOR:
+				if (jugadoractual.equals(getJugador())) {
+					this.modelo.jugadorAJugar();
+				}
+				break;
 			case CARTA_NO_COINCIDENTE:
 				this.vista.mostrarCartaNoCoincidente();
 				break;				
@@ -57,12 +63,22 @@ public class Controlador implements IControladorRemoto {
 			case JODETE_LEVANTAS_0_CANTADO:	
 				this.vista.mostrarJodete0();
 				break;
+			case BLOQUEAR_JUGADOR_ANTERIOR:
+				if (jugadoractual.equals(getJugador())) {
+					this.vista.bloquearBoton();
+				}
+				break;
 			case LISTOS_PARA_COMENZAR:
 				this.vista.mostrarJugadorAgregado(ultimojugador, this.modelo.getNumeroJugadores());
 				if (!getJugador().equals("")) {				
 					this.vista.mostrarListosParaComenzar();
 					}
-				break;				
+				break;	
+			case TIPOS_DE_PALO:
+				if (jugadoractual.equals(getJugador())) {
+					this.vista.mostrarPalosACambiar();
+					}
+				break;
 			case SELECCIONAR_CARTA_A_TIRAR:
 				if (jugadoractual.equals(getJugador())) {
 					this.vista.seleecionCartaTirar();
@@ -76,8 +92,12 @@ public class Controlador implements IControladorRemoto {
 			case MOSTRAR_OPCIONES:
 				if (jugadoractual.equals(getJugador())) {
 					this.vista.mostrarOpcionesUsuario(this.modelo.getOpcionb(),this.modelo.getOpcionc(),this.modelo.getOpciond(),this.modelo.getOpcionf());
+					this.vista.setOpcionSeleccionada();
 				}
 				break;				
+			case NO_CANTO_JODETE_PRIMERO:
+					this.vista.mostrarNoCantoJodetePrimero();
+				break;
 			case SELECCIONAR_OPCIONES:
 				if (jugadoractual.equals(this.getJugador())) {
 					String opc = this.modelo.getOp();
@@ -85,11 +105,15 @@ public class Controlador implements IControladorRemoto {
 					this.vista.obetnerOpcionElegida(opc);
 				}			
 				break;
+			case MOSTRAR_PUNTOS:
+				this.vista.mostrarPuntosJugadores(this.modelo.getPuntosJugadores());
+				break;
 			case JUGADOR_ELIMINADO:
 				this.vista.mostrarJugadorEliminado(this.modelo.ultimoJugadorEliminado());
 				if (this.getJugadorEliminado(getJugador())) {
 					this.vista.mostrarJugadorEliminadoPropio();
 				}
+				break;
 			case CANTO_JODETE:
 				this.vista.mostrarCantoJodete(1);
 				break;
@@ -109,7 +133,7 @@ public class Controlador implements IControladorRemoto {
 				this.vista.mostrarCartaTiradaCorrectamente();
 				break;				
 			case CARTA_TIRADA:
-				this.vista.mostrarCartaTirada(this.modelo.getCartaEnJuegoNumero(), this.modelo.getCartaEnJuegoPalo());
+				this.vista.mostrarCartaTirada(this.modelo.getCartaEnJuegoNumero(), this.modelo.getCartaEnJuegoPalo(), this.modelo.getCartasALevantar());
 				break;
 			case CAMBIO_COLOR:				
 				this.vista.mostrarCambioColor(palo);
