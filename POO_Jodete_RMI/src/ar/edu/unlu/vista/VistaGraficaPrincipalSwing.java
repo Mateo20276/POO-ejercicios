@@ -399,6 +399,8 @@ public class VistaGraficaPrincipalSwing implements IVista {
 		btnCambiarPalo.setVisible(d);
 		btnCantarJodete.setVisible(e);
 		btnNoCantoJodete.setVisible(f);
+		spinner.setValue(1);
+		
 	}
 	public void mostrarCartaTirada(Integer numero, String palo, Integer extra) {
 		println("\n");

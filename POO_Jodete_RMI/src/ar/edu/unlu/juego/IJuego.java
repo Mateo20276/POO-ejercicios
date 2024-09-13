@@ -33,7 +33,7 @@ public interface IJuego extends IObservableRemoto, Serializable{
 	Integer getSentidoJuego() throws RemoteException;
 	void setSentidoJuego(Integer sentidoJuego) throws RemoteException;
 	Integer getNumeroJugadores() throws RemoteException;
-	Integer getCartaEspecial2() throws RemoteException;
+	//Integer getCartaEspecial2() throws RemoteException;
 	void comenzarJuego() throws RemoteException;
 	void jugadorAJugar() throws RemoteException;
 	void seleccionarOpcion(String opcion) throws RemoteException;
