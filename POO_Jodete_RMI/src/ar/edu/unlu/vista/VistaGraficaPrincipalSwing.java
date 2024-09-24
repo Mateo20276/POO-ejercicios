@@ -50,7 +50,6 @@ public class VistaGraficaPrincipalSwing implements IVista {
     private String cartaTirar = "";
 	private JButton btnTirarCarta, btnLevantarCarta, btnTerminarTurno, btnCantarJodete, btnNoCantoJodete, btnCambiarPalo;
 	private static Serializador serializador=new Serializador("src/datos.dat");
-	private JSpinner spinner;
 
 
 	public VistaGraficaPrincipalSwing() {
@@ -79,9 +78,6 @@ public class VistaGraficaPrincipalSwing implements IVista {
 		
 		JPanel panel_1 = new JPanel();
 		frame.getContentPane().add(panel_1, BorderLayout.SOUTH);
-		
-		spinner = new JSpinner(new SpinnerNumberModel(1, 1, 10, 1));
-		panel_1.add(spinner);
 		
 		btnTirarCarta = new JButton("Tirar carta");
 		panel_1.add(btnTirarCarta);
@@ -123,7 +119,6 @@ public class VistaGraficaPrincipalSwing implements IVista {
 		
 		btnTirarCarta.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	        	cartaTirar = Integer.toString((Integer) spinner.getValue());
 	        	try {
 		        	obetnerOpcionElegida("b");
 				} catch (RemoteException e1) {
@@ -200,7 +195,7 @@ public class VistaGraficaPrincipalSwing implements IVista {
         cardImages = new ArrayList<>();
         for (int i = 0; i < cartas.size(); i++) {
         	ArrayList<String> cartaSplited = splitearCarta(cartas.get(i));
-            String imagePath = "src/imagenes/" + cartaSplited.get(0) + " DE "+ cartaSplited.get(1) +".png";
+            String imagePath = "src/imagenes/" + cartaSplited.get(0) + " DE "+ cartaSplited.get(1).toUpperCase() +".png";
             ImageIcon originalImage = new ImageIcon(imagePath);
             Image scaledImage = originalImage.getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH);
             cardImages.add(new ImageIcon(scaledImage));
@@ -219,14 +214,14 @@ public class VistaGraficaPrincipalSwing implements IVista {
 		this.controlador = controlador;	
 	}
 	public void verCartaMazoAbajo(String carta) {
+		ArrayList<String> cartas = new ArrayList<String>();
+		cartas.add(carta);
+		this.loadCardImages(cartas);
 		JPanel panelCartaArriba = new JPanel();
 		scrollPaneCartaArriba.setViewportView(panelCartaArriba);
 		panelCartaArriba.removeAll();
-		ArrayList<String> cartaSplited = splitearCarta(carta);
-		String imagePath = "src/imagenes/" + cartaSplited.get(0) + " DE " + cartaSplited.get(1).toUpperCase() + ".png";
-        ImageIcon originalImage = new ImageIcon(imagePath);
-        Image scaledImage = originalImage.getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH);
-        panelCartaArriba.add(new JLabel(new ImageIcon(scaledImage)));
+        panelCartaArriba.add(new JLabel(cardImages.get(0)));
+        
 	}	
 	public void verCartas(ArrayList<String> cartas) {
 	    loadCardImages(cartas);
@@ -239,21 +234,28 @@ public class VistaGraficaPrincipalSwing implements IVista {
 	        JPanel cardPanel = new JPanel();
 	        cardPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-	        JLabel imageLabel = new JLabel(cardImages.get(i));
+	        JButton  imageLabel = new JButton (cardImages.get(i));
 	        cardPanel.add(imageLabel);
 
 	        JLabel textLabel = new JLabel("Número: " + (i + 1));
+	        int index = i; // Necesario porque 'i' cambiará con cada iteración
+	        imageLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+	            public void mouseClicked(java.awt.event.MouseEvent evt) {
+	                cartaSeleccionada(index); // Función para manejar la carta seleccionada
+	            }
+	        });
+	        
 	        cardPanel.add(textLabel);
 
 	        panelCartas.add(cardPanel);
-	    }
-
-	    SpinnerNumberModel model = (SpinnerNumberModel) spinner.getModel();
-	    model.setMinimum(1);   
-	    model.setMaximum(cardImages.size());
-	    panelCartas.revalidate();
-	    panelCartas.repaint();		
+	    }	
 	}
+	
+	private void cartaSeleccionada(int index) {
+		 System.out.println("Has seleccionado la carta número: " + (index + 1));
+		 cartaTirar =  String.valueOf(index + 1);		 		
+	}
+	
 	private static void disableComponents(Container container, boolean enabled) {
         Component[] components = container.getComponents();
         for (Component component : components) {
@@ -399,7 +401,6 @@ public class VistaGraficaPrincipalSwing implements IVista {
 		btnCambiarPalo.setVisible(d);
 		btnCantarJodete.setVisible(e);
 		btnNoCantoJodete.setVisible(f);
-		spinner.setValue(1);
 		
 	}
 	public void mostrarCartaTirada(Integer numero, String palo, Integer extra) {
